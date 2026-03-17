@@ -1,0 +1,49 @@
+site_name: BESSY II Datathon 2026
+site_description: "NeXus conversion challenges — mySpot cuvette-scan (XRF + XRD)"
+site_author: "BESSY II Datathon Team"
+
+# Use the popular Material theme for MkDocs
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: teal
+  font:
+    text: Roboto
+    code: Roboto Mono
+  # logo: docs/assets/logo.png
+
+# Navigation: top-level order and titles
+nav:
+  - Home: index.md
+  - Getting started: getting-started.md
+  - Challenges:
+      - 1 — Populate NXdata & NXuser: challenges/01-populate-nxdata.md
+      - 2 — Convert to NXfluo: challenges/02-nxfluo.md
+      - 3 — Convert to NXmonopd: challenges/03-nxmonopd.md
+      - 4 — Multimodal appdef: challenges/04-multimodal.md
+  # - Resources: resources.md
+
+# Plugins (optional but recommended)
+#plugins:
+#  - search
+#  - git-revision-date
+#  - mkdocs-simple-hooks
+
+# Extra CSS/JS (optional)
+extra_css:
+  - 'assets/custom.css'
+extra_javascript:
+  - 'assets/custom.js'
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+
+repo_url: 'https://github.com/hz-b/2026_BESSYII_Datathon'
+edit_uri: ''
+
+# Site will be published to the gh-pages branch by the GitHub Action
