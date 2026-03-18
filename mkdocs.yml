@@ -1,6 +1,8 @@
 site_name: BESSY II Datathon 2026
-site_description: "NeXus conversion challenges — mySpot cuvette-scan (XRF + XRD)"
+site_description: |
+  Hands-on workshop: Standardizing materials science data with NeXus, pynxtools, and NOMAD.
 site_author: "BESSY II Datathon Team"
+repo_url: https://github.com/hz-b/2026_BESSYII_Datathon
 
 # Use the popular Material theme for MkDocs
 theme:
@@ -17,11 +19,19 @@ theme:
 nav:
   - Home: index.md
   - Getting started: getting-started.md
+  - A primer on NeXus: nexus.md
+  - Building an example pipeline:
+      - 0 — Setup: example_pipeline/0-setup.md
+      - 1 — Writing a simple application definition: example_pipeline/1-appdef.md
+      - 2 — Creating a pynxtools reader: example_pipeline/2-reader.md
+      - 3 — Uploading to NOMAD: example_pipeline/3-nomad.md
   - Challenges:
+      - 0 — Overview and setup: challenges/overview.md
       - 1 — Populate NXdata & NXuser: challenges/01-populate-nxdata.md
       - 2 — Convert to NXfluo: challenges/02-nxfluo.md
       - 3 — Convert to NXmonopd: challenges/03-nxmonopd.md
-      - 4 — Multimodal appdef: challenges/04-multimodal.md
+      - 4 — Multimodal application definition: challenges/04-multimodal.md
+  - Working with your own data: your-own-data.md
   # - Resources: resources.md
 
 # Plugins (optional but recommended)
@@ -31,10 +41,10 @@ nav:
 #  - mkdocs-simple-hooks
 
 # Extra CSS/JS (optional)
-extra_css:
-  - 'assets/custom.css'
-extra_javascript:
-  - 'assets/custom.js'
+# extra_css:
+#  - 'assets/custom.css'
+# extra_javascript:
+#  - 'assets/custom.js'
 
 markdown_extensions:
   - admonition
@@ -42,6 +52,11 @@ markdown_extensions:
       guess_lang: false
   - toc:
       permalink: true
+  - pymdownx.details
+  - pymdownx.superfences      
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
 
 repo_url: 'https://github.com/hz-b/2026_BESSYII_Datathon'
 edit_uri: ''
