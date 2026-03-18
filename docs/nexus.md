@@ -1,6 +1,7 @@
 # A primer on NeXus
 
 **Duration:** 30 minutes
+
 **Goal:** Understand what NeXus is, why it exists, and how its three building blocks fit together — enough to make sense of the rest of the workshop.
 
 ---

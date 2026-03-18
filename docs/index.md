@@ -55,7 +55,7 @@ On day 2, we split up:
 | Time | Session |
 |------|---------|
 | 09:00 | Recap + open questions |
-| 09:15 | **Session 4** — Working on challenges or your own data| [Challenges](./challenges/overview) |
+| 09:15 | **Session 4** — Working on challenges or your own data| [Challenges](challenges/overview) |
 | 11:00 | Break | — |
 | 11:15 | **Session 5** — Continue session 4 |
 | 12:40 | Presentation — show and tell | — |
@@ -67,7 +67,7 @@ These are four data challenges on converting mySpot cuvette-scan experimental da
 
 You can see them all on the overview page:
 
-- [Challenges](./challenges/overview)
+- [Challenges](challenges/overview.md)
 
 #### Working on your own data
 
@@ -75,7 +75,7 @@ If you brought for own data, you can also work directly on converting those to N
 
 Learn more on this page:
 
-- [Bring your own data](./your-own-data.md)
+- [Bring your own data](your-own-data.md)
 
 
 ## Resources
