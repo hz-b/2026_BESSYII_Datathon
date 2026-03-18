@@ -31,5 +31,5 @@ jobs:
         run: uv run mkdocs build --strict
 
       - name: Build and deploy docs (main)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: uv run mkdocs gh-deploy --force --remote-branch gh-pages
