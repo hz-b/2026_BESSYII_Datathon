@@ -1,0 +1,12 @@
+[project]
+name = "bessy-datathon-docs"
+version = "2026.0"
+requires-python = ">=3.10"
+dependencies = [
+    "click<=8.2",
+    "mkdocs-material>=9.5",
+    "mkdocs-material-extensions",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/FAIRmat-NFDI/2026_BESSYII_Datathon"
