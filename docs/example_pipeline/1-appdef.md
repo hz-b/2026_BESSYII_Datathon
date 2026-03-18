@@ -1,4 +1,4 @@
-# Session 2 — Write your first application definition
+# Session 1 — Write your first application definition
 
 **Duration:** 1 hour
 

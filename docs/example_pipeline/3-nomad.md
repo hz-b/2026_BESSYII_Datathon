@@ -1,8 +1,8 @@
-# Session 4 — Upload to NOMAD
+# Session 3 — Upload to NOMAD
 
 **Duration:** 45 minutes
 
-**Goal:** Upload the `output.nxs` file you produced in Session 3 to NOMAD, explore it through the GUI, and learn how to filter entries by NeXus application definition.
+**Goal:** Upload the `output.nxs` file you produced in [Session 2](2-reader.md) to NOMAD, explore it through the GUI, and learn how to filter entries by NeXus application definition.
 
 ---
 

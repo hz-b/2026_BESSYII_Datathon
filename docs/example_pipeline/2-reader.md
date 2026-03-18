@@ -1,4 +1,4 @@
-# Session 3 — Build a pynxtools reader
+# Session 2 — Build a pynxtools reader
 
 **Duration:** 1 hours
 
@@ -84,7 +84,7 @@ self.hdf5_data = result
                     result[name] = obj[()]
             f.visititems(collect)
         self.hdf5_data = result
-```
+    ```
 
 **Check:** print `self.hdf5_data.keys()` — you should see the HDF5 paths as keys.
 

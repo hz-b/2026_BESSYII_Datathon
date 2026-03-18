@@ -319,7 +319,7 @@ dataconverter generate-template --nxdl NXmpes
 
 ### No definition? Write a minimal one.
 
-Use the skills from Session 2. Start with the smallest possible skeleton:
+Use the skills from [Session 2](example_pipeline/1-appdef.md). Start with the smallest possible skeleton:
 
 ```yaml
 # NXmytechnique.yaml

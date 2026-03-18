@@ -2,8 +2,6 @@
 
 Welcome - this site hosts the documentation for the BESSY II Datathon 2026, a hands-on lunch-to-lunch workshop with the goal of **standardizing science through FAIR data**
 
-<!-- Welcome — this site hosts the datathon documentation and the four data challenges on converting mySpot cuvette-scan experimental data into NeXus format using **pynxtools**. -->
-
 In this event you will turn raw instrument data into fully FAIR, community-standard NeXus files, upload them to a shared NOMAD instance, and make them searchable for anyone. By the end you will have a working data conversion pipeline for your own data.
 
 ## What you will learn
