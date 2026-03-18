@@ -88,6 +88,9 @@ self.hdf5_data = result
 
 **Check:** print `self.hdf5_data.keys()` — you should see the HDF5 paths as keys.
 
+!!! tip
+    It may seem unintutive to first parse the HDF5 data, transform it, and then write it back to a NeXus file. We are doing this for learning purposes only; if you want to either transfer or link data from an HDF5 file to a NeXus file, `pynxtools` provides a specialized reader (called [`JsonMap`](https://fairmat-nfdi.github.io/pynxtools/reference/built-in-readers.html#the-jsonmapreader)). You will learn more about it in the challenges on day 2.
+
 ---
 
 ## Exercise 2 — `handle_eln_file` (25 min)
@@ -255,14 +258,13 @@ The config file is the **semantic bridge** between your data and the NeXus templ
 ### Step 1 — generate the template
 
 ```bash
-dataconverter generate-template --nxdl NXsimple
-```
+dataconverter generate-template --nxdl NXsimple >> tests/data/workshop-example/config_file.json.
 
-Copy the JSON output to `tests/data/workshop-example/config_file.json`.
+```
 
 ### Step 2 — fill in the values
 
-For each required or recommended path, decide:
+For each required or recommended path, decide how to fill it:
 
 | Data source | Config value |
 |---|---|
@@ -275,11 +277,11 @@ Example config fragment:
 
 ```json
 {
-  "/ENTRY[entry]/title":                  "@eln",
-  "/ENTRY[entry]/start_time":             "@eln",
+  "/ENTRY[entry]/title":"@eln",
+  "/ENTRY[entry]/start_time":"@eln",
   "/ENTRY[entry]/INSTRUMENT[instrument]/SOURCE[source]/wavelength": "@attrs:metadata/source/wavelength",
-  "/ENTRY[entry]/DATA[data]/x_values":    "@data:x_values",
-  "/ENTRY[entry]/DATA[data]/data":        "@data:y_values"
+  "/ENTRY[entry]/DATA[data]/x_values":"@data:x_values",
+  "/ENTRY[entry]/DATA[data]/data":"@data:y_values"
 }
 ```
 
@@ -295,7 +297,7 @@ dataconverter \
   --output output.nxs
 ```
 
-Inspect the result:
+Inspect the result. Use either `h5web` in VScode or run:
 
 ```bash
 python3 -c "
@@ -313,7 +315,8 @@ with h5py.File('output.nxs', 'r') as f:
 pytest tests/ -v
 ```
 
-The existing tests use `ReaderTest`, which:
+The existing tests use `pynxtool.testing.ReaderTest`, which:
+
 1. Runs the conversion
 2. Compares the output to a reference file
 3. Reports any differences

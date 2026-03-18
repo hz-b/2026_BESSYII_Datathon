@@ -8,9 +8,9 @@
 
 ## The problem NeXus solves
 
-Every instrument produces data in a different format. A beamline XPS system writes a proprietary `.sle` file; a home-built setup writes CSV; a third instrument uses HDF5 but with its own internal layout. When someone else wants to reuse your data, they have to reverse-engineer the format.
+Every instrument produces data in a different format. A beamline XPS system may write a proprietary file; a home-built setup writes CSV; a third instrument uses HDF5 but with its own internal layout. When someone else wants to reuse your data, they have to reverse-engineer the format.
 
-**NeXus** is a community standard — agreed on by neutron, muon, and X-ray facilities — that defines a single HDF5-based layout for scientific data. If your file is NeXus-conformant, any tool that understands NeXus can read it without extra documentation.
+**NeXus** is a community standard — widely used in materials science — that defines a single layout for scientific data. If your file is NeXus-conformant, any tool that understands NeXus can read it without extra documentation.
 
 ---
 
@@ -31,13 +31,13 @@ NXprocess                                                   detector/
 
 Reusable components that describe parts of an experiment: `NXsource`, `NXdetector`, `NXsample`, `NXprocess`, …
 
-Each base class defines fields and their types but makes **all of them optional** — a base class is a vocabulary, not a contract.
+Each base class defines subgroups, fields, and atributes, and their types, but makes **all of them optional** — a base class is a vocabulary, not a contract.
 
 Browse them at [manual.nexusformat.org/classes/base_classes](https://manual.nexusformat.org/classes/base_classes/).
 
 ### 2. Application definitions
 
-A **contract** for a specific experimental technique. It selects which base classes to use, which fields are required/recommended/optional, and what the structure must look like. A file that claims to conform to `NXxps` must contain everything `NXxps` requires.
+A **contract** for a specific experimental technique. It selects which base classes to use, which subgroups, fields, and atributes are required/recommended/optional, and what the structure must look like. A file that claims to conform to `NXxps` must contain everything `NXxps` requires.
 
 Application definitions are the key to interoperability: two XPS instruments from different manufacturers can both write `NXxps` files that any reader can open.
 
@@ -45,7 +45,7 @@ Browse them at [fairmat-nfdi.github.io/nexus_definitions](https://fairmat-nfdi.g
 
 ### 3. HDF5 files
 
-NeXus files are HDF5 files with a specific internal layout. You can open them with any HDF5 tool (h5py, HDFView, …) or with a NeXus-aware tool like `pynxtools`.
+For serialization of Nexus data, almost always HDF5 is used. NeXus files are HDF5 files with a specific internal layout. You can open them with any HDF5 tool (`h5py`, `HDFView`,  `h5web`, …) or with a NeXus-aware tool like `pynxtools`.
 
 ---
 
@@ -54,7 +54,7 @@ NeXus files are HDF5 files with a specific internal layout. You can open them wi
 A minimal NeXus file looks like this:
 
 ```
-/                          ← HDF5 root
+/                          ← NXroot
 └── entry/                 ← NXentry: one measurement
     ├── definition = "NXxps"
     ├── title = "Cu 2p XPS at room temperature"
@@ -78,9 +78,10 @@ A minimal NeXus file looks like this:
 
 | Concept | Name | What it means |
 |---|---|---|
-| Base class type | `NXdetector` | The *class* — what kind of component |
-| Instance name | `detector` (lowercase) | The *actual* group name in the HDF5 file |
-| Template path | `/ENTRY[entry]/INSTRUMENT[instrument]/DETECTOR[detector]/` | Upper case = class, `[lower]` = instance |
+| Base class | `NXdetector` | The *class*, i.e., what kind of component |
+| Group | `NXxps/NXinstrument/NXdetector` | A specific detector for XPS measurements, a specialiatuon of the base class |
+| Instance name | `entry/instrument/detector` | The *actual* group name in the HDF5 file |
+| Template path | `/ENTRY[entry]/INSTRUMENT[instrument]/DETECTOR[detector]/` | Outside = concept, `[inside]` = instance |
 
 ```yaml
 # NXDL (schema)
@@ -88,10 +89,11 @@ detector(NXdetector):   # concept name (schema): can be any name
   distance(NX_FLOAT):
 
 # HDF5 file (instance)
+/entry/instrument/my_pilatus_detector/@NX_class = "NXdetector"  # any valid name
 /entry/instrument/my_pilatus_detector/distance = 0.5   # any valid name
 ```
 
-The HDF5 group `my_pilatus_detector` satisfies the `detector(NXdetector)` requirement because its type is `NXdetector`.
+The HDF5 group `my_pilatus_detector` satisfies the `detector(NXdetector)` requirement because its type (indicated by the `@NX_class` attribute) is `NXdetector`.
 
 ---
 

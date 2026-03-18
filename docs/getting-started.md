@@ -2,8 +2,8 @@
 
 ## Coding Exercise
 
-- [Visual Studio Code](https://code.visualstudio.com/download) (Please install it on the laptop you planned to work on)
-- h5web extension (to visualize HDF5 file)
+- [Visual Studio Code](https://code.visualstudio.com/download) (Please install it on the laptop you planned to work on). 
+- For visualization purposes: [`h5web` extension](https://marketplace.visualstudio.com/items?itemName=h5web.vscode-h5web) in VScode.
 - Python package and project manager: [uv](https://docs.astral.sh/uv/)
 
 ## Collaboration, Review, and documentation of the Datathon Challenge

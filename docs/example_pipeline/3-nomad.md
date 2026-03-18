@@ -19,11 +19,21 @@ NOMAD is a free, open research data platform that understands NeXus natively. Wh
 
 ## 4.1 Where to go
 
+There exist different NOMAD deployments that are used for different purposes:
+
 | Instance | URL | Notes |
 |---|---|---|
 | NOMAD production | `nomad-lab.eu/prod/v1/gui` | Public datasets — permanent |
 | NOMAD test | `nomad-lab.eu/prod/v1/test/gui` | Safe to experiment — data is not permanent |
 | Local deployment | `localhost:8080` | Your own NOMAD install |
+
+**For this workshop, we are working on a specialized deployment called `oasis-b`**:
+
+| Instance | URL | Notes |
+|---|---|---|
+| NOMAD oasis-b | `https://nomad-lab.eu/prod/v1/oasis-b/gui/` | Safe to experiment for this workshop |
+
+**Please only use this URL!**
 
 You need a free NOMAD account to upload. Create one at **Login → Register** on any instance above. Browsing published data is always public.
 
@@ -55,17 +65,18 @@ NOMAD detects the `.nxs` extension, identifies the pynxtools NeXus parser, and p
 
 ## 4.4 Explore the entry
 
-Click the **→** arrow icon next to the entry. Three tabs are available:
+Click the **→** arrow icon next to the entry. Four tabs are available:
 
 | Tab | What you see |
 |---|---|
 | **OVERVIEW** | Summary cards: core metadata on the left, visualisations on the right |
 | **FILES** | The raw `.nxs` file and any auxiliary files |
 | **DATA** | The fully parsed NeXus tree — every group, field, and attribute from your NXDL |
+| **LOG** | Logging information about the proccessing of your file |
 
-The **DATA tab** is the most useful for NeXus work: it renders the HDF5 hierarchy using NOMAD's metainfo schema, with unit-aware values and inline documentation drawn from your NXDL `<doc>` strings.
+The **DATA tab** is the most useful for NeXus work: it renders the HDF5 hierarchy using NOMAD's metainfo schema, with unit-aware values and inline documentation drawn from your NXDL `<doc>` strings. We also have `h5web` integrated there directly, so that you can explore the parsed data directly in the NeXus field.
 
-The **OVERVIEW tab** shows a *NeXus* card with an interactive tree viewer — you can browse groups and fields without downloading the file.
+The **OVERVIEW tab** shows a *NeXus* card with an interactive tree viewer using `h5web` — you can browse groups and fields without downloading the file.
 
 ---
 
@@ -73,10 +84,9 @@ The **OVERVIEW tab** shows a *NeXus* card with an interactive tree viewer — yo
 
 Your entry is now searchable by its NeXus application definition:
 
-1. Go to **Explore → Entries** in the top menu
-2. Open the filter panel on the left
-3. Under **Data**, expand the **NeXus** filter group
-4. Set **Application definition** to `NXsimple`
+1. Go to **Explore → NeXus** in the top menu
+2. Select the filter widget **NeXus class**
+4. Set the filter to `NXsimple`
 
 You should see your entry (and any other workshop entries) appear in the list.
 
@@ -106,7 +116,7 @@ with h5py.File(f"{upload_path}/output.nxs", "r") as f:
 5. Files you write back into the upload directory are stored in NOMAD. Click **Reprocess** on the upload page to re-index newly created entries.
 
 !!! note
-    NORTH availability depends on the NOMAD deployment. The public instance at `nomad-lab.eu` has NORTH enabled. Local deployments need a separate NORTH configuration.
+    NORTH availability depends on the NOMAD deployment. The public and the `oasis-b` instance have NORTH enabled. Local deployments need to install the [`nomad-north-jupyter`](https://github.com/FAIRmat-NFDI/nomad-north-jupyter) plugin.
 
 ---
 
@@ -120,7 +130,7 @@ with h5py.File(f"{upload_path}/output.nxs", "r") as f:
 | Get a DOI | Group entries into a Dataset, then publish the dataset | Citable with a persistent identifier |
 
 !!! warning
-    Once published, an upload cannot be deleted and files cannot be changed. Use the **test instance** to practice first.
+    Once published, an upload cannot be deleted and files cannot be changed. Use the **oasis-b instance** to practice first.
 
 ---
 
@@ -137,4 +147,5 @@ with h5py.File(f"{upload_path}/output.nxs", "r") as f:
 
 - [NOMAD documentation > Upload and publish data](https://nomad-lab.eu/prod/v1/docs/tutorial/upload_publish.html)
 - [NOMAD documentation > Explore data](https://nomad-lab.eu/prod/v1/docs/tutorial/explore.html)
-- [pynxtools tutorial > NeXus files in NOMAD](https://fairmat-nfdi.github.io/pynxtools/tutorial/nexus-to-nomad/)
+- [pynxtools tutorial > NeXus files in NOMAD](https://fairmat-nfdi.github.io/pynxtools/tutorial/nexus-to-nomad.html)
+- [pynxtools how-to guide > Use pynxtools with NOMAD¶](https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/use-with-nomad.html)

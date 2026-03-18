@@ -34,23 +34,15 @@ NXentry
  │   │   ├── x_gap, slit_separation  [NX_LENGTH]
  │   │   └── height, material  [optional]
  │   └── detector(NXdetector)
- │       ├── distance  [NX_LENGTH]
- │       └── data(NXdata)  ← raw pixel data
- │           ├── data  dims (n_x, n_y)
- │           ├── x  pixel indices
- │           └── y  pixel indices
- ├── processID(NXprocess)  [optional, nameType=partial]
- │   └── sequence_index, description, program, version
  └── interference_pattern(NXdata)  ← calibrated default plot
      ├── data  dims (n_x, n_y)
      ├── x_offset  [NX_LENGTH]
      └── y_offset  [NX_LENGTH]
 ```
 
-Notice two `NXdata` groups:
+- **`interference_pattern`** contains spatial axes (mm from centre). This is the used as the default plot by NOMAD and other viewers.
 
-- **`detector/data`** — raw pixel data with integer pixel-index axes. Always store the rawest data you have.
-- **`interference_pattern`** — calibrated spatial axes (mm from centre), used as the default plot by NOMAD and other viewers.
+Note that the `NXdouble_slit` application definition is already part of `pynxtools`. We will still build it from scratch here, but this will help us with using it directly, without needing to manually inject it there.
 
 ---
 
@@ -64,6 +56,15 @@ nxdl2nyaml NXdouble_slit.nxdl.xml --output-file NXdouble_slit.yaml
 # Generate a template JSON showing all required paths
 dataconverter generate-template --nxdl NXdouble_slit
 ```
+
+---
+
+## Step 0 — nyaml
+
+NeXus definitions must follow the [NXDL language](https://manual.nexusformat.org/nxdl.html). Typically, they are written in XML.
+
+Here, we are using a simpler YAML notation. THe [`nyaml` tool](https://github.com/FAIRmat-NFDI/nyaml) you installed earlier will help us losslessly convert between YAML and XML.
+
 
 ---
 
@@ -84,16 +85,11 @@ NXdouble_slit(NXobject):
     start_time(NX_DATE_TIME):
 ```
 
-Copy this into `src/pynxtools/definitions/contributed_definitions/NXdouble_slit.nxdl.xml` (after converting) and run:
+You can see its XML representation by running the converter:
 
 ```bash
-dataconverter generate-template --nxdl NXdouble_slit
+nyaml2nxdl NXdouble_slit.yaml --output-file NXdouble_slit.nxdl.xml
 ```
-
-You should see `/ENTRY[entry]/title` and `/ENTRY[entry]/start_time` in the output.
-
-!!! note "Concept vs. instance paths"
-    The template shows `ENTRY` (upper case) — the concept — and `[entry]` (lower case in brackets) — the default instance name. The concept is the schema; the instance is what gets written to the file.
 
 ---
 
@@ -208,7 +204,10 @@ Add these two groups as siblings of `(NXinstrument)` inside `(NXentry)`.
         exists: optional
 ```
 
-**Calibrated default plot:**
+**Default plot:**
+
+Note how here we are using `enumeration` to indicate the `\@signal` and `\@axes` attribute
+must match the fields defined within `NXdata`.
 
 ```yaml
     interference_pattern(NXdata):
@@ -242,14 +241,24 @@ Add these two groups as siblings of `(NXinstrument)` inside `(NXentry)`.
 
 ## Step 5 — Validate (10 min)
 
-Convert to NXDL XML and check the template:
+Convert to NXDL XML and inspect:
 
 ```bash
 nyaml2nxdl NXdouble_slit.yaml --output-file NXdouble_slit.nxdl.xml
-cp NXdouble_slit.nxdl.xml \
-    <path-to-pynxtools>/src/pynxtools/definitions/contributed_definitions/
+```
+
+As discussed earlier, the application definition is already used inside `pynxtools`.
+
+Run:
+
+```bash
 dataconverter generate-template --nxdl NXdouble_slit
 ```
+
+You should now see a dictionary-style output. You should see e.g. `/ENTRY[entry]/title` and `/ENTRY[entry]/start_time` in the output. This is a template for `NXdouble_slit` that we will fill in the next step. 
+
+!!! note "Concept vs. instance paths"
+    The template shows `ENTRY` (upper case) — the concept — and `[entry]` (lower case in brackets) — the default instance name. The concept is the schema; the instance is what gets written to the file.
 
 Look for these paths in the output:
 - `/ENTRY[entry]/INSTRUMENT[instrument]/detector/DATA[data]/x`
@@ -369,12 +378,12 @@ Look for these paths in the output:
 
 ## Advanced: specialize a base class (bonus)
 
-If your source is always a laser, you can create a dedicated `NXlaser` base class rather than repeating the specialisation in every application definition:
+If your source is always a laser, you can create a dedicated `NXlaser` base class rather than repeating the specialization in every application definition:
 
 ```yaml
 # NXlaser.yaml
 category: base
-doc: A specialisation of NXsource for coherent laser sources.
+doc: A specialization of NXsource for coherent laser sources.
 type: group
 NXlaser(NXsource):
   wavelength(NX_FLOAT):
@@ -390,9 +399,24 @@ Then in `NXdouble_slit`, replace `source(NXsource)` with `source(NXlaser)` and o
 
 ---
 
-## How to add your definition to pynxtools
+## Appendix: How to add your definition to pynxtools
+
+As we said above, `NXdouble_slit.nxdl.xml` is already part of `pynxtools`, so you don't need to add it for the following steps. Hoever, if you create another application definition `NXmytechnique`, there are two possibilities of adding them.
 
 **Local development (fastest):**
+
+In order to use your application definitions directly, you will need to add to the NeXus defintitions stored in `pynxtools`. For this, you need to install `pynxtools` in editable mode. You can learn more in the `pynxtools` [development guide](https://fairmat-nfdi.github.io/pynxtools/tutorial/contributing.html#development-installation).
+
+Install `pynxtools` with the `-e` option in the same virtual environment that you are already working in. Instantiate the `definitions` submodule.
+
+Then you can place your application definition NXDL XML file in `pynxtools`:
+
+```bash
+
+cp NXmytechnique.nxdl.xml src/pynxtools/definitions/contributed_definitions/
+dataconverter generate-template --nxdl NXmytechnique
+```
+
 
 ```bash
 cp NXdouble_slit.nxdl.xml \
@@ -401,6 +425,8 @@ dataconverter generate-template --nxdl NXdouble_slit
 ```
 
 **Community contribution (permanent):**
+
+The more permant way is to add the application definition (or new base classes) to the FAIRmat NeXus definitions repository. That ensures that others can use it and that it can eventually be brought to standardization with the NeXus International Advisory Committee (NIAC):
 
 1. Fork [FAIRmat-NFDI/nexus_definitions](https://github.com/FAIRmat-NFDI/nexus_definitions)
 2. Add your NXDL file to `contributed_definitions/`

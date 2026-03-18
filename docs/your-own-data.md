@@ -22,6 +22,13 @@ The only part that changes between techniques and formats is **Step A** — the 
 
 ---
 
+## Step 0 — Setup (~10 min)
+
+Repeat the steps shown in the [setup of Day 1](example_pipeline/0-setup.md/#4-instantiate-the-plugin-template). The goal is to have another `pynxtools` reader plugin
+instantiated with the `pynxtools-plugin-template`.
+
+---
+
 ## Step 1 — Know your format (~30 min)
 
 Before writing any reader code, understand what you are working with.
@@ -338,10 +345,20 @@ NXmytechnique(NXobject):
     (NXdata):
 ```
 
-Convert and place it:
+Convert it:
 
 ```bash
 nyaml2nxdl NXmytechnique.yaml --output-file NXmytechnique.nxdl.xml
+```
+
+In order to use your application definitions directly, you will need to add to the NeXus defintitions stored in `pynxtools`. For this, you need to install `pynxtools` in editable mode. You can learn more in the `pynxtools` [development guide](https://fairmat-nfdi.github.io/pynxtools/tutorial/contributing.html#development-installation).
+
+Install `pynxtools` with the `-e` option in the same virtual environment that you are already working in. Instantiate the `definitions` submodule.
+
+Then you can place your application definition NXDL XML file in `pynxtools`:
+
+```bash
+
 cp NXmytechnique.nxdl.xml src/pynxtools/definitions/contributed_definitions/
 dataconverter generate-template --nxdl NXmytechnique
 ```
@@ -353,7 +370,7 @@ dataconverter generate-template --nxdl NXmytechnique
 Generate the template first:
 
 ```bash
-dataconverter generate-template --nxdl <YOUR_NXDL> > template.txt
+dataconverter generate-template --nxdl <YOUR_NXDL> > config.json
 ```
 
 For each path in the output, fill in the config:
@@ -365,14 +382,7 @@ For each path in the output, fill in the config:
 | `self.data["signal_array"]` | `"@data:signal_array"` |
 | Fixed constant | `"eV"` or `532` |
 
-Prefix a key with `!` if the whole group should be dropped when the value is absent:
-
-```json
-{
-  "!/ENTRY[entry]/INSTRUMENT[instrument]/DETECTOR[detector]/count_time": "@attrs:detector/count_time",
-  "/ENTRY[entry]/INSTRUMENT[instrument]/DETECTOR[detector]/count_time/@units": "s"
-}
-```
+Learm more about the config file in the [`pynxtools` documentation for the `MultiFormatReader`](https://fairmat-nfdi.github.io/pynxtools/learn/pynxtools/multi-format-reader.html#parsing-the-config-file).
 
 ---
 
