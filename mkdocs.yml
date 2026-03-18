@@ -41,10 +41,10 @@ nav:
 #  - mkdocs-simple-hooks
 
 # Extra CSS/JS (optional)
-extra_css:
-  - 'assets/custom.css'
-extra_javascript:
-  - 'assets/custom.js'
+# extra_css:
+#  - 'assets/custom.css'
+# extra_javascript:
+#  - 'assets/custom.js'
 
 markdown_extensions:
   - admonition
@@ -56,6 +56,7 @@ markdown_extensions:
   - pymdownx.superfences      
   - pymdownx.tabbed:
       alternate_style: true
+  - attr_list
 
 repo_url: 'https://github.com/hz-b/2026_BESSYII_Datathon'
 edit_uri: ''

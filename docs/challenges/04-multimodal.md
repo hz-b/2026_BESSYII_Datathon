@@ -8,3 +8,6 @@ Design a **custom NeXus application definition** for a multimodal experiment whe
 - A master metadata file with scan parameters  
 - A minimal ELN YAML file with partial metadata  
 - A mapping template (in JSON format) showing how fields can be mapped to NeXus structure (incomplete and must be adapted)
+- You can find an example multimodal NeXus application definition here
+[Download NXmultimodal.yaml](../downloads/NXmultimodal.yaml){:target="_blank" .md-button}
+
