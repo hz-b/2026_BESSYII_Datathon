@@ -1,10 +1,10 @@
 # Common Context for All Challenges
 
-The dataset originates from a cuvette scan experiment at the mySpot beamline (BESSY II). The data acquistion of mySpot beamline is shown below. 
+The dataset originates from a cuvette scan experiment at the mySpot beamline (BESSY II). The data acquisition of mySpot beamline is shown below.
 
 ![image](../assets/TUPD111_f1.png)
 
-In this experiment, a grid scan is performed across multiple cuvettes (see figure below), and at each scan point fluorescence (XRF) and diffraction (XRD) measurements are recorded simultaneously. The goal of the experiment was to correlate the occurence of crystallization phases with elemental distribution.
+In this experiment, a grid scan is performed across multiple cuvettes (see figure below), and at each scan point fluorescence (XRF) and diffraction (XRD) measurements are recorded simultaneously. The goal of the experiment was to correlate the occurrence of crystallization phases with elemental distribution.
 
 ![image](../assets/TUPD111_f2.png)
 
