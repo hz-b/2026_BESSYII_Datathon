@@ -424,11 +424,11 @@ with h5py.File('output.nxs', 'r') as f:
 
 You can find the full reader implementation here:
 
-- [`reader.py`]()
+[`reader.py`](https://github.com/hz-b/2026_BESSYII_Datathon/blob/main/results/reference/reader.py){:target="_blank" .md-button }
 
 As promised at the top, you can continue to the next session even if you have not yet finished writing the reader or the config file. Download the final NeXus file here:
 
-[Download result.nxs](../downloads/result.nxs){:target="_blank" .md-button}
+[Download output.nxs](https://raw.githubusercontent.com/hz-b/2026_BESSYII_Datathon/main/results/reference/output.nxs){:target="_blank" .md-button }
 
 ---
 
