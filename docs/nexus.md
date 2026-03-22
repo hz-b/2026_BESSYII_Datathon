@@ -2,21 +2,21 @@
 
 **Duration:** 30 minutes
 
-**Goal:** Understand what NeXus is, why it exists, and how its three building blocks fit together — enough to make sense of the rest of the workshop.
+**Goal:** Understand what NeXus is, why it exists, and how its building blocks fit together — enough to make sense of the rest of the workshop.
 
 ---
 
 ## The problem NeXus solves
 
-Every instrument produces data in a different format. A beamline XPS system may write a proprietary file; a home-built setup writes CSV; a third instrument uses HDF5 but with its own internal layout. When someone else wants to reuse your data, they have to reverse-engineer the format.
+Every instrument produces data in a different format. A beamline system may write a proprietary file; a home-built setup writes CSV; a third instrument uses HDF5 but with its own internal layout. When someone else wants to reuse your data, they have to reverse-engineer the format.
 
-**NeXus** is a community standard — widely used in materials science — that defines a single layout for scientific data. If your file is NeXus-conformant, any tool that understands NeXus can read it without extra documentation.
+**NeXus** is a community standard, widely used in materials science, that defines a single layout for scientific data. If your file is NeXus-conformant, any tool that understands NeXus can read it without extra documentation.
 
 ---
 
 ## Three building blocks
 
-```
+```text
 Base classes          Application definitions          HDF5 file
 ─────────────         ───────────────────────          ─────────
 NXsource              NXxps                           /entry/
@@ -31,21 +31,21 @@ NXprocess                                                   detector/
 
 Reusable components that describe parts of an experiment: `NXsource`, `NXdetector`, `NXsample`, `NXprocess`, …
 
-Each base class defines subgroups, fields, and atributes, and their types, but makes **all of them optional** — a base class is a vocabulary, not a contract.
+Each base class defines subgroups, fields, and attributes, and their types, but makes **all of them optional**. A base class is a vocabulary, not a contract.
 
-Browse them at [manual.nexusformat.org/classes/base_classes](https://manual.nexusformat.org/classes/base_classes/).
+Browse them at [manual.nexusformat.org/classes/base_classes](https://manual.nexusformat.org/classes/base_classes/){:target="_blank" rel="noopener"}.
 
 ### 2. Application definitions
 
-A **contract** for a specific experimental technique. It selects which base classes to use, which subgroups, fields, and atributes are required/recommended/optional, and what the structure must look like. A file that claims to conform to `NXxps` must contain everything `NXxps` requires.
+A **contract** for a specific experimental technique. It selects which base classes to use, which subgroups, fields, and attributes are required/recommended/optional, and what the structure must look like. A file that claims to conform to `NXxps` must contain everything `NXxps` requires.
 
 Application definitions are the key to interoperability: two XPS instruments from different manufacturers can both write `NXxps` files that any reader can open.
 
-Browse them at [fairmat-nfdi.github.io/nexus_definitions](https://fairmat-nfdi.github.io/nexus_definitions/).
+Browse them at [fairmat-nfdi.github.io/nexus_definitions](https://fairmat-nfdi.github.io/nexus_definitions/){:target="_blank" rel="noopener"}.
 
 ### 3. HDF5 files
 
-For serialization of Nexus data, almost always HDF5 is used. NeXus files are HDF5 files with a specific internal layout. You can open them with any HDF5 tool (`h5py`, `HDFView`,  `h5web`, …) or with a NeXus-aware tool like `pynxtools`.
+For serialization of NeXus data, almost always HDF5 is used. NeXus files are HDF5 files with a specific internal layout. You can open them with any HDF5 tool (`h5py`, `HDFView`,  `h5web`, …) or with a NeXus-aware tool like `pynxtools`.
 
 ---
 
@@ -53,7 +53,7 @@ For serialization of Nexus data, almost always HDF5 is used. NeXus files are HDF
 
 A minimal NeXus file looks like this:
 
-```
+```text
 /                          ← NXroot
 └── entry/                 ← NXentry: one measurement
     ├── definition = "NXxps"
@@ -79,13 +79,13 @@ A minimal NeXus file looks like this:
 | Concept | Name | What it means |
 |---|---|---|
 | Base class | `NXdetector` | The *class*, i.e., what kind of component |
-| Group | `NXxps/NXinstrument/NXdetector` | A specific detector for XPS measurements, a specialiatuon of the base class |
+| Group | `NXxps/NXinstrument/NXdetector` | A specific detector for XPS measurements, a specialization of the base class within the application definition |
 | Instance name | `entry/instrument/detector` | The *actual* group name in the HDF5 file |
-| Template path | `/ENTRY[entry]/INSTRUMENT[instrument]/DETECTOR[detector]/` | Outside = concept, `[inside]` = instance |
+| Template path | `/ENTRY[entry]/INSTRUMENT[instrument]/DETECTOR[detector]/` | Outside = name of the concept, `[inside]` = name of the instance |
 
 ```yaml
-# NXDL (schema)
-detector(NXdetector):   # concept name (schema): can be any name
+# NXDL (schema) in YAML
+detector(NXdetector):
   distance(NX_FLOAT):
 
 # HDF5 file (instance)
@@ -122,6 +122,6 @@ wavelength(NX_FLOAT):
 
 ## Further reading
 
-- [pynxtools > Learn > NeXus primer](https://fairmat-nfdi.github.io/pynxtools/learn/nexus/nexus-primer/)
-- [NeXus manual > Applying NeXus](https://manual.nexusformat.org/applying-nexus.html)
-- [NeXus manual > NXDL types and unit categories](https://manual.nexusformat.org/nxdl-types.html)
+- [pynxtools > Learn > NeXus primer](https://fairmat-nfdi.github.io/pynxtools/learn/nexus/nexus-primer/){:target="_blank" rel="noopener"}
+- [NeXus manual > Applying NeXus](https://manual.nexusformat.org/applying-nexus.html){:target="_blank" rel="noopener"}
+- [NeXus manual > NXDL types and unit categories](https://manual.nexusformat.org/nxdl-types.html){:target="_blank" rel="noopener"}

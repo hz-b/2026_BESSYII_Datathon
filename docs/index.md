@@ -10,7 +10,7 @@ In this event you will turn raw instrument data into fully FAIR, community-stand
 |---|---|
 | **NeXus** | How the community file format works and why it makes data reusable |
 | **NeXus application definitions** | Writing the schema that describes your own experiment |
-| **pynxtools** | Python package your working with NeXus data |
+| **pynxtools** | Python package for working with NeXus data |
 | **NOMAD** | Upload, explore, filter, and share your data on a research data platform |
 
 ## Before we start
@@ -19,7 +19,7 @@ Use the "Getting started" page to setup your environment. Each challenge page co
 
 - [Getting started](getting-started.md)
 
-Optionally, you can already learn more about NeXus here:
+Optionally, you can already learn more about NeXus:
 
 - [A primer on NeXus](nexus.md)
 
@@ -34,7 +34,7 @@ On day 1, we will build an end-to-end parsing pipeline for converting an example
 | Time | Session | Page |
 |------|---------|------|
 | 12:00 | Registration and Welcome | — |
-| 13:00 | Inspiration: Familiarize with NeXus and NOMAD | this page |
+| 13:00 | Inspiration: Familiarize with NeXus and NOMAD | [Home](index.md) |
 | 13:45 | **Session 0** — Setup for day 1 (15 min) | [Setup](example_pipeline/0-setup.md) |
 | 14:00 | **Session 1** — Write a simple application definition (1 h) | [Application definitions](example_pipeline/1-appdef.md) |
 | 15:00 | Coffee break | — |
@@ -69,7 +69,7 @@ You can see them all on the overview page:
 
 #### Working on your own data
 
-If you brought for own data, you can also work directly on converting those to NeXus.
+If you brought your own data, you can also work directly on converting those to NeXus.
 
 Learn more on this page:
 
@@ -80,11 +80,11 @@ Learn more on this page:
 
 | Resource | URL |
 |---|---|
-| pynxtools documentation | [fairmat-nfdi.github.io/pynxtools](https://fairmat-nfdi.github.io/pynxtools/) |
-| pynxtools plugin template | [github.com/FAIRmat-NFDI/pynxtools-plugin-template](https://github.com/FAIRmat-NFDI/pynxtools-plugin-template) |
-| NeXus definitions | [fairmat-nfdi.github.io/nexus_definitions](https://fairmat-nfdi.github.io/nexus_definitions/) |
-| NeXus manual | [manual.nexusformat.org](https://manual.nexusformat.org) |
-| NOMAD | [nomad-lab.eu](https://nomad-lab.eu/prod/v1/gui) |
+| pynxtools documentation | [fairmat-nfdi.github.io/pynxtools](https://fairmat-nfdi.github.io/pynxtools/){:target="_blank" rel="noopener"} |
+| pynxtools plugin template | [github.com/FAIRmat-NFDI/pynxtools-plugin-template](https://github.com/FAIRmat-NFDI/pynxtools-plugin-template){:target="_blank" rel="noopener"} |
+| NeXus definitions | [fairmat-nfdi.github.io/nexus_definitions](https://fairmat-nfdi.github.io/nexus_definitions/){:target="_blank" rel="noopener"} |
+| NeXus manual | [manual.nexusformat.org](https://manual.nexusformat.org){:target="_blank" rel="noopener"} |
+| NOMAD | [nomad-lab.eu](https://nomad-lab.eu/prod/v1/gui){:target="_blank" rel="noopener"} |
 
 
 <!-- Optional: badge linking to site preview or CI status -->

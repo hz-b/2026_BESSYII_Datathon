@@ -12,8 +12,8 @@
 
 No matter what format your data comes in, the workflow is identical to Day 1:
 
-```
-Step A  Read your file(s) into a flat Python dict on self
+```text
+Step A  Read your file(s) and store data as a dict on self
 Step B  Write a config file that maps dict keys → NeXus paths
 Step C  Run the converter and fix validation errors
 ```
@@ -35,7 +35,7 @@ Before writing any reader code, understand what you are working with.
 
 ### Identify your format
 
-| Format | Typical extensions | How to recognise |
+| Format | Typical extensions | How to recognize |
 |---|---|---|
 | HDF5 / NeXus | `.h5`, `.hdf5`, `.nxs` | Binary; starts with `\x89HDF` |
 | HDF5 (instrument brand) | `.h5m`, `.hsp`, `.he5`, … | Same magic bytes; vendor-specific internal layout |
@@ -168,7 +168,7 @@ def handle_vamas_file(self, file_path: str) -> None:
         "kinetic_energy":  block.x,
         "intensity":       block.y,
         "source_energy":   block.source_energy,
-        "pass_energy":     block.analyser_pass_energy,
+        "pass_energy":     block.analyzer_pass_energy,
         "dwell_time":      block.signal_collection_time,
         "sample_id":       block.sample_id,
         "technique":       block.technique,
@@ -326,7 +326,7 @@ dataconverter generate-template --nxdl NXmpes
 
 ### No definition? Write a minimal one.
 
-Use the skills from [Session 2](example_pipeline/1-appdef.md). Start with the smallest possible skeleton:
+Use the skills from [Session 1](example_pipeline/1-appdef.md). Start with the smallest possible skeleton:
 
 ```yaml
 # NXmytechnique.yaml
@@ -351,7 +351,7 @@ Convert it:
 nyaml2nxdl NXmytechnique.yaml --output-file NXmytechnique.nxdl.xml
 ```
 
-In order to use your application definitions directly, you will need to add to the NeXus defintitions stored in `pynxtools`. For this, you need to install `pynxtools` in editable mode. You can learn more in the `pynxtools` [development guide](https://fairmat-nfdi.github.io/pynxtools/tutorial/contributing.html#development-installation).
+In order to use your application definitions directly, you will need to add to the NeXus definitions stored in `pynxtools`. For this, you need to install `pynxtools` in editable mode. You can learn more in the `pynxtools` [development guide](https://fairmat-nfdi.github.io/pynxtools/tutorial/contributing.html#development-installation){:target="_blank" rel="noopener"}.
 
 Install `pynxtools` with the `-e` option in the same virtual environment that you are already working in. Instantiate the `definitions` submodule.
 
@@ -382,7 +382,7 @@ For each path in the output, fill in the config:
 | `self.data["signal_array"]` | `"@data:signal_array"` |
 | Fixed constant | `"eV"` or `532` |
 
-Learm more about the config file in the [`pynxtools` documentation for the `MultiFormatReader`](https://fairmat-nfdi.github.io/pynxtools/learn/pynxtools/multi-format-reader.html#parsing-the-config-file).
+Learn more about the config file in the [`pynxtools` documentation for the `MultiFormatReader`](https://fairmat-nfdi.github.io/pynxtools/learn/pynxtools/multi-format-reader.html#parsing-the-config-file){:target="_blank" rel="noopener"}.
 
 ---
 
@@ -443,8 +443,8 @@ Repeat until no errors remain.
 
 ## Further reading
 
-- [pynxtools tutorial > Build a reader](https://fairmat-nfdi.github.io/pynxtools/tutorial/build-a-reader/)
-- [pynxtools how-to > Use the MultiFormatReader](https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/use-multi-format-reader/)
-- [pynxtools how-to > Build a plugin](https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/build-a-plugin/)
-- [pynxtools reference > Available plugins](https://fairmat-nfdi.github.io/pynxtools/reference/plugins/)
-- [NeXus application definitions](https://fairmat-nfdi.github.io/nexus_definitions/)
+- [pynxtools tutorial > Build a reader](https://fairmat-nfdi.github.io/pynxtools/tutorial/build-a-reader/){:target="_blank" rel="noopener"}
+- [pynxtools how-to > Use the MultiFormatReader](https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/use-multi-format-reader/){:target="_blank" rel="noopener"}
+- [pynxtools how-to > Build a plugin](https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/build-a-plugin/){:target="_blank" rel="noopener"}
+- [pynxtools reference > Available plugins](https://fairmat-nfdi.github.io/pynxtools/reference/plugins/){:target="_blank" rel="noopener"}
+- [NeXus application definitions](https://fairmat-nfdi.github.io/nexus_definitions/){:target="_blank" rel="noopener"}

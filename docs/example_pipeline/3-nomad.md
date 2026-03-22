@@ -54,12 +54,12 @@ The upload page has two views:
 
 ## 4.3 Drop your file
 
-Drag and drop `output.nxs` onto the upload area, or click to browse for it.
+Drag and drop `output.nxs` (or the reference `results.nxs` file) onto the upload area, or click to browse for it.
 
 NOMAD detects the `.nxs` extension, identifies the pynxtools NeXus parser, and processes the file automatically. Wait for the green **processed** indicator next to the entry.
 
 !!! tip
-    You can upload a `.zip` containing `output.nxs` plus any auxiliary files (ELN YAML, raw HDF5, config JSON). NOMAD extracts the archive and processes each file it recognises.
+    You can upload a `.zip` containing `<file>.nxs` plus any auxiliary files (ELN YAML, raw HDF5, config JSON). NOMAD extracts the archive and processes each file it recognizes.
 
 ---
 
@@ -69,12 +69,12 @@ Click the **→** arrow icon next to the entry. Four tabs are available:
 
 | Tab | What you see |
 |---|---|
-| **OVERVIEW** | Summary cards: core metadata on the left, visualisations on the right |
+| **OVERVIEW** | Summary cards: core metadata on the left, visualizations on the right |
 | **FILES** | The raw `.nxs` file and any auxiliary files |
 | **DATA** | The fully parsed NeXus tree — every group, field, and attribute from your NXDL |
-| **LOG** | Logging information about the proccessing of your file |
+| **LOG** | Logging information about the processing of your file |
 
-The **DATA tab** is the most useful for NeXus work: it renders the HDF5 hierarchy using NOMAD's metainfo schema, with unit-aware values and inline documentation drawn from your NXDL `<doc>` strings. We also have `h5web` integrated there directly, so that you can explore the parsed data directly in the NeXus field.
+The **DATA tab** is the most useful for NeXus work: it renders the HDF5 hierarchy using NOMAD's Metainfo schema, with unit-aware values and inline documentation drawn from your NXDL `<doc>` strings. We also have `h5web` integrated there directly, so that you can explore the parsed data directly in the NeXus field.
 
 The **OVERVIEW tab** shows a *NeXus* card with an interactive tree viewer using `h5web` — you can browse groups and fields without downloading the file.
 
@@ -86,20 +86,20 @@ Your entry is now searchable by its NeXus application definition:
 
 1. Go to **Explore → NeXus** in the top menu
 2. Select the filter widget **NeXus class**
-4. Set the filter to `NXsimple`
+4. Set the filter to `NXdouble_slit`
 
 You should see your entry (and any other workshop entries) appear in the list.
 
 !!! note "Why this matters"
-    Two participants who built readers for different instruments both targeting `NXsimple` produce entries that are discoverable together in the same search. This is the concrete benefit of agreeing on an application definition.
+    Two participants who built readers for different instruments both targeting `NXdouble_slit` produce entries that are discoverable together in the same search. This is the concrete benefit of agreeing on an application definition.
 
 ---
 
-## 4.6 Analyse with NORTH
+## 4.6 Analyze with NORTH
 
-NORTH (NOMAD Remote Tools Hub) runs containerised Jupyter notebooks connected directly to your upload — no download needed.
+NORTH (NOMAD Remote Tools Hub) runs containerized Jupyter notebooks connected directly to your upload — no download needed.
 
-1. From the entry **OVERVIEW** page, click **Analyse in NORTH** (or navigate to **Analyse → NORTH tools** from the top menu)
+1. From the entry **OVERVIEW** page, click **Analyze in NORTH** (or navigate to **Analyze → NORTH tools** from the top menu)
 2. Choose a container. The generic **Jupyter** tool works for standard Python analysis.
 3. NOMAD launches the container and mounts your upload directory. A Jupyter tab opens in the browser.
 4. Access your file via the environment variable that NOMAD sets:
@@ -109,14 +109,14 @@ import h5py, os
 
 upload_path = os.environ.get("NOMAD_UPLOAD_PATH", ".")
 with h5py.File(f"{upload_path}/output.nxs", "r") as f:
-    data = f["entry/data/data"][()]
+    data = f["entry/interference_pattern/data"][()]
     print(data.shape)
 ```
 
 5. Files you write back into the upload directory are stored in NOMAD. Click **Reprocess** on the upload page to re-index newly created entries.
 
 !!! note
-    NORTH availability depends on the NOMAD deployment. The public and the `oasis-b` instance have NORTH enabled. Local deployments need to install the [`nomad-north-jupyter`](https://github.com/FAIRmat-NFDI/nomad-north-jupyter) plugin.
+    NORTH availability depends on the NOMAD deployment. The public and the `oasis-b` instance have NORTH enabled. Local deployments need to install the [`nomad-north-jupyter`](https://github.com/FAIRmat-NFDI/nomad-north-jupyter){:target="_blank" rel="noopener"} plugin.
 
 ---
 
@@ -138,14 +138,14 @@ with h5py.File(f"{upload_path}/output.nxs", "r") as f:
 
 - [ ] `output.nxs` uploaded and shows **processed** status
 - [ ] Entry opens and the DATA tab shows the full NeXus hierarchy
-- [ ] `NXsimple` filter in Explore → Entries returns your entry
+- [ ] `NXdouble_slit` filter in Explore → Entries returns your entry
 - [ ] (Optional) NORTH Jupyter notebook opens and reads the data
 
 ---
 
 ## Further reading
 
-- [NOMAD documentation > Upload and publish data](https://nomad-lab.eu/prod/v1/docs/tutorial/upload_publish.html)
-- [NOMAD documentation > Explore data](https://nomad-lab.eu/prod/v1/docs/tutorial/explore.html)
-- [pynxtools tutorial > NeXus files in NOMAD](https://fairmat-nfdi.github.io/pynxtools/tutorial/nexus-to-nomad.html)
-- [pynxtools how-to guide > Use pynxtools with NOMAD¶](https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/use-with-nomad.html)
+- [NOMAD documentation > Upload and publish data](https://nomad-lab.eu/prod/v1/docs/tutorial/upload_publish.html){:target="_blank" rel="noopener"}
+- [NOMAD documentation > Explore data](https://nomad-lab.eu/prod/v1/docs/tutorial/explore.html){:target="_blank" rel="noopener"}
+- [pynxtools tutorial > NeXus files in NOMAD](https://fairmat-nfdi.github.io/pynxtools/tutorial/nexus-to-nomad.html){:target="_blank" rel="noopener"}
+- [pynxtools how-to guide > Use pynxtools with NOMAD](https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/use-with-nomad.html){:target="_blank" rel="noopener"}
