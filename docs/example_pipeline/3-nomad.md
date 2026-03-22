@@ -17,7 +17,7 @@ NOMAD is a free, open research data platform that understands NeXus natively. Wh
 
 ---
 
-## 4.1 Where to go
+## Where to go
 
 There exist different NOMAD deployments that are used for different purposes:
 
@@ -39,7 +39,7 @@ You need a free NOMAD account to upload. Create one at **Login → Register** on
 
 ---
 
-## 4.2 Create an upload
+## Create an upload
 
 1. Log in and go to **Publish → Your uploads**
 2. Click **CREATE NEW UPLOAD**
@@ -52,18 +52,18 @@ The upload page has two views:
 
 ---
 
-## 4.3 Drop your file
+### Drop your file
 
-Drag and drop `output.nxs` (or the reference `results.nxs` file) onto the upload area, or click to browse for it.
+Drag and drop `output.nxs` (or the reference `output.nxs` file) onto the upload area, or click to browse for it.
 
 NOMAD detects the `.nxs` extension, identifies the pynxtools NeXus parser, and processes the file automatically. Wait for the green **processed** indicator next to the entry.
 
 !!! tip
-    You can upload a `.zip` containing `<file>.nxs` plus any auxiliary files (ELN YAML, raw HDF5, config JSON). NOMAD extracts the archive and processes each file it recognizes.
+    You can upload a `.zip` containing `output.nxs` plus any auxiliary files (ELN YAML, raw HDF5, config JSON). NOMAD extracts the archive and processes each file it recognizes.
 
 ---
 
-## 4.4 Explore the entry
+### Explore the entry
 
 Click the **→** arrow icon next to the entry. Four tabs are available:
 
@@ -80,7 +80,7 @@ The **OVERVIEW tab** shows a *NeXus* card with an interactive tree viewer using 
 
 ---
 
-## 4.5 Filter by application definition
+## Filter by application definition
 
 Your entry is now searchable by its NeXus application definition:
 
@@ -95,7 +95,7 @@ You should see your entry (and any other workshop entries) appear in the list.
 
 ---
 
-## 4.6 Analyze with NORTH
+## Analyze with NORTH
 
 NORTH (NOMAD Remote Tools Hub) runs containerized Jupyter notebooks connected directly to your upload — no download needed.
 
@@ -120,7 +120,11 @@ with h5py.File(f"{upload_path}/output.nxs", "r") as f:
 
 ---
 
-## 4.7 Share and publish (optional)
+## Share and publish (optional)
+
+!!! danger
+    Once published, an upload cannot be deleted and files cannot be changed. Use the **oasis-b instance** to practice first.
+
 
 | Action | How | Effect |
 |---|---|---|
@@ -128,9 +132,6 @@ with h5py.File(f"{upload_path}/output.nxs", "r") as f:
 | Make visible to everyone | Check **Visible to all** under Edit visibility | Searchable before publishing |
 | Publish | **PUBLISH** button at the bottom | Immutable, permanently public |
 | Get a DOI | Group entries into a Dataset, then publish the dataset | Citable with a persistent identifier |
-
-!!! warning
-    Once published, an upload cannot be deleted and files cannot be changed. Use the **oasis-b instance** to practice first.
 
 ---
 

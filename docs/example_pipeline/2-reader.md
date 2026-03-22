@@ -447,6 +447,7 @@ As promised at the top, you can continue to the next session even if you have no
 
 ## Further reading
 
-- [pynxtools tutorial > Build your first reader](https://fairmat-nfdi.github.io/pynxtools/tutorial/build-a-reader/){:target="_blank" rel="noopener"}
-- [pynxtools how-to > Use MultiFormatReader](https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/use-multi-format-reader/){:target="_blank" rel="noopener"}
-- [pynxtools how-to > Build a plugin](https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/build-a-plugin/){:target="_blank" rel="noopener"}
+- [pynxtools how-to > Build a plugin](https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/build-a-plugin){:target="_blank" rel="noopener"}
+
+- [pynxtools tutorial > Build your first reader](https://fairmat-nfdi.github.io/pynxtools/tutorial/build-a-reader){:target="_blank" rel="noopener"}
+- [pynxtools how-to > Use the MultiFormatReader](https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/use-multi-format-reader){:target="_blank" rel="noopener"}

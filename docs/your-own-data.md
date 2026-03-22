@@ -22,14 +22,14 @@ The only part that changes between techniques and formats is **Step A** — the 
 
 ---
 
-## Step 0 — Setup (~10 min)
+## Step 0 — Setup
 
 Repeat the steps shown in the [setup of Day 1](example_pipeline/0-setup.md/#4-instantiate-the-plugin-template). The goal is to have another `pynxtools` reader plugin
 instantiated with the `pynxtools-plugin-template`.
 
 ---
 
-## Step 1 — Know your format (~30 min)
+## Step 1 — Know your format
 
 Before writing any reader code, understand what you are working with.
 
@@ -68,7 +68,7 @@ Take 10 minutes to understand the structure before writing any code.
 
 ---
 
-## Step 2 — Implement `handle_*_file` (~45 min)
+## Step 2 — Implement `handle_*_file`
 
 Pick the section below that matches your format and implement the corresponding handler.
 
@@ -274,7 +274,7 @@ self.extensions[".myext"] = self.handle_my_format
 
 ---
 
-## Step 3 — Update the callbacks (~20 min)
+## Step 3 — Update the callbacks
 
 If you used `self.data` (not `self.hdf5_data`), update the three callbacks:
 
@@ -302,7 +302,7 @@ def get_data(self, key: str, path: str) -> Any:
 
 ---
 
-## Step 4 — Find your application definition (~20 min)
+## Step 4 — Find your application definition
 
 ### Does one already exist?
 
@@ -316,7 +316,6 @@ Check whether a community definition exists for your technique:
 | Ellipsometry | `NXellipsometry` | `pynxtools-ellips` |
 | Electron microscopy | `NXem` | `pynxtools-em` |
 | X-ray diffraction | `NXxrd` | `pynxtools-xrd` |
-| Generic / workshop | `NXsimple` | this workshop |
 
 Test whether it is installed:
 
@@ -365,7 +364,7 @@ dataconverter generate-template --nxdl NXmytechnique
 
 ---
 
-## Step 5 — Write the config file (~40 min)
+## Step 5 — Write the config file
 
 Generate the template first:
 
@@ -386,7 +385,7 @@ Learn more about the config file in the [`pynxtools` documentation for the `Mult
 
 ---
 
-## Step 6 — Convert, validate, iterate (~20 min)
+## Step 6 — Convert, validate, iterate
 
 ```bash
 dataconverter \
@@ -443,8 +442,8 @@ Repeat until no errors remain.
 
 ## Further reading
 
-- [pynxtools tutorial > Build a reader](https://fairmat-nfdi.github.io/pynxtools/tutorial/build-a-reader/){:target="_blank" rel="noopener"}
-- [pynxtools how-to > Use the MultiFormatReader](https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/use-multi-format-reader/){:target="_blank" rel="noopener"}
-- [pynxtools how-to > Build a plugin](https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/build-a-plugin/){:target="_blank" rel="noopener"}
-- [pynxtools reference > Available plugins](https://fairmat-nfdi.github.io/pynxtools/reference/plugins/){:target="_blank" rel="noopener"}
-- [NeXus application definitions](https://fairmat-nfdi.github.io/nexus_definitions/){:target="_blank" rel="noopener"}
+- [pynxtools reference > Available plugins](https://fairmat-nfdi.github.io/pynxtools/reference/plugins){:target="_blank" rel="noopener"}
+- [pynxtools how-to > Build a plugin](https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/build-a-plugin){:target="_blank" rel="noopener"}
+- [pynxtools tutorial > Build a reader](https://fairmat-nfdi.github.io/pynxtools/tutorial/build-a-reader){:target="_blank" rel="noopener"}
+- [pynxtools how-to > Use the MultiFormatReader](https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/use-multi-format-reader){:target="_blank" rel="noopener"}
+- [NeXus application definitions](https://fairmat-nfdi.github.io/nexus_definitions){:target="_blank" rel="noopener"}
