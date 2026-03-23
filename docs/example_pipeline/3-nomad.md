@@ -144,7 +144,7 @@ with h5py.File(f"{upload_path}/xps.nxs", "r") as f:
 
 - [ ] `xps.nxs` uploaded and shows **processed** status
 - [ ] Entry opens and the DATA tab shows the full NeXus hierarchy
-- [ ] `NXdouble_slit` filter in Explore → Entries returns your entry
+- [ ] Filter for `NXps` in Explore/NeXus → Entries show your entry
 - [ ] (Optional) NORTH Jupyter notebook opens and reads the data
 
 ---
