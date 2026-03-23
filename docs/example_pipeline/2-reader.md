@@ -207,7 +207,7 @@ def handle_eln_file(self, file_path: str) -> None:
     self.eln_data = parse_yml(
         file_path,
         convert_dict=self.CONVERT_DICT,
-        parent_key="/ENTRY",
+        parent_key="/ENTRY[entry]",
     )
 ```
 

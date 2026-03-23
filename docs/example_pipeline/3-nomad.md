@@ -31,7 +31,8 @@ There exist different NOMAD deployments that are used for different purposes:
 
 | Instance | URL | Notes |
 |---|---|---|
-| NOMAD oasis-b | `https://nomad-lab.eu/prod/v1/oasis-b/gui/` | Safe to experiment for this workshop |
+<!-- | NOMAD oasis-b | `https://nomad-lab.eu/prod/v1/oasis-b/gui/` | Safe to experiment for this workshop | -->
+| NOMAD staging | `https://nomad-lab.eu/prod/v1/staging/` | Safe to experiment for this workshop |
 
 **Please only use this URL!**
 
