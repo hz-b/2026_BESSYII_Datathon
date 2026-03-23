@@ -1,0 +1,12 @@
+{
+    "/@default":"entry",
+    "/ENTRY[entry]/@default":"data",
+    "/ENTRY[entry]/title":"",
+    "/ENTRY[entry]/start_time":"",
+    "/ENTRY[entry]/definition":"NXmonopd",
+    "/ENTRY[entry]/INSTRUMENT[instrument]/SOURCE[source]/type":"Synchrotron X-ray Source",
+    "/ENTRY[entry]/INSTRUMENT[instrument]/SOURCE[source]/name":"BESSY II",
+    "/ENTRY[entry]/INSTRUMENT[instrument]/SOURCE[source]/probe":"x-ray",
+    "/ENTRY[entry]/USER[user]/email":"@eln:user/email",
+    "/ENTRY[entry]/USER[user]/name":"@eln:user/name"
+}

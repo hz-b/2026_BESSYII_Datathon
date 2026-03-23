@@ -1,0 +1,17 @@
+{
+    "/@default":"entry",
+    "/ENTRY[entry]/@default":"data",
+    "/ENTRY[entry]/title":"",
+    "/ENTRY[entry]/start_time":"", 
+    "/ENTRY[entry]/definition":"NXfluo",
+    "/ENTRY[entry]/INSTRUMENT[instrument]/SOURCE[source]/type":"Synchrotron X-ray Source",
+    "/ENTRY[entry]/INSTRUMENT[instrument]/SOURCE[source]/name":"BESSY II",
+    "/ENTRY[entry]/INSTRUMENT[instrument]/SOURCE[source]/probe":"x-ray",
+    "/ENTRY[entry]/INSTRUMENT[instrument]/fluorescence/data":"",
+    "/ENTRY[entry]/INSTRUMENT[instrument]/fluorescence/energy":"", 
+    "/ENTRY[entry]/SAMPLE[sample]/x":"@data:entry_NXfluo/sample/x",
+    "/ENTRY[entry]/SAMPLE[sample]/y":"@data:entry_NXfluo/sample/y",
+    "/ENTRY[entry]/data/x":"@link:/entry/sample/x",
+    "/ENTRY[entry]/data/y":"@link:/entry/sample/y",
+    "/ENTRY[entry]/USER[user]/email":"@eln:user/email"
+}

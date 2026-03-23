@@ -1,0 +1,10 @@
+user:
+  email: xxx@xxxx
+  name: xxx
+sample:
+  name: "My Wonderful Sample"
+  rotation_angle:  
+process:
+  program: bluesky_v0.1.1
+  note: 
+    description: "This program does the azimuthal integration of the data acquired at myspot"
