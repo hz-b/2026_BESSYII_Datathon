@@ -2,7 +2,7 @@
 
 **Duration:** 45 minutes
 
-**Goal:** Upload the `output.nxs` file you produced in [Session 2](2-reader.md) to NOMAD, explore it through the GUI, and learn how to filter entries by NeXus application definition.
+**Goal:** Upload a NeXus file you to NOMAD, explore it through the GUI, and learn how to filter entries by NeXus application definition.
 
 ---
 
@@ -54,12 +54,16 @@ The upload page has two views:
 
 ### Drop your file
 
-Drag and drop `output.nxs` (or the reference `output.nxs` file) onto the upload area, or click to browse for it.
+While you did succesfully create an `output.nxs` file earlier, NOMAD does not currently know about `NXdouble_slit`. Therefore, we will upload a different file: a NeXus file that is compliant with the application definitions `NXxps` for X-ray Photoelectron Spectroscopy.
+
+[Download xps.nxs](https://raw.githubusercontent.com/hz-b/2026_BESSYII_Datathon/main/results/reference/xps.nxs){:target="_blank" .md-button }
+
+Drag and drop `xps.nxs` (or the reference `xps.nxs` file) onto the upload area, or click to browse for it.
 
 NOMAD detects the `.nxs` extension, identifies the pynxtools NeXus parser, and processes the file automatically. Wait for the green **processed** indicator next to the entry.
 
 !!! tip
-    You can upload a `.zip` containing `output.nxs` plus any auxiliary files (ELN YAML, raw HDF5, config JSON). NOMAD extracts the archive and processes each file it recognizes.
+    You can upload a `.zip` containing `xps.nxs` plus any auxiliary files (ELN YAML, raw HDF5, config JSON). NOMAD extracts the archive and processes each file it recognizes.
 
 ---
 
@@ -86,12 +90,12 @@ Your entry is now searchable by its NeXus application definition:
 
 1. Go to **Explore → NeXus** in the top menu
 2. Select the filter widget **NeXus class**
-4. Set the filter to `NXdouble_slit`
+4. Set the filter to `NXxps`
 
 You should see your entry (and any other workshop entries) appear in the list.
 
-!!! note "Why this matters"
-    Two participants who built readers for different instruments both targeting `NXdouble_slit` produce entries that are discoverable together in the same search. This is the concrete benefit of agreeing on an application definition.
+<!-- !!! note "Why this matters"
+    Two participants who built readers for different instruments both targeting `NXxps` produce entries that are discoverable together in the same search. This is the concrete benefit of agreeing on an application definition. -->
 
 ---
 
@@ -108,7 +112,7 @@ NORTH (NOMAD Remote Tools Hub) runs containerized Jupyter notebooks connected di
 import h5py, os
 
 upload_path = os.environ.get("NOMAD_UPLOAD_PATH", ".")
-with h5py.File(f"{upload_path}/output.nxs", "r") as f:
+with h5py.File(f"{upload_path}/xps.nxs", "r") as f:
     data = f["entry/interference_pattern/data"][()]
     print(data.shape)
 ```
@@ -123,7 +127,7 @@ with h5py.File(f"{upload_path}/output.nxs", "r") as f:
 ## Share and publish (optional)
 
 !!! danger
-    Once published, an upload cannot be deleted and files cannot be changed. Use the **oasis-b instance** to practice first.
+    Once published, an upload cannot be deleted and files cannot be changed.
 
 
 | Action | How | Effect |
@@ -137,7 +141,7 @@ with h5py.File(f"{upload_path}/output.nxs", "r") as f:
 
 ## Checklist
 
-- [ ] `output.nxs` uploaded and shows **processed** status
+- [ ] `xps.nxs` uploaded and shows **processed** status
 - [ ] Entry opens and the DATA tab shows the full NeXus hierarchy
 - [ ] `NXdouble_slit` filter in Explore → Entries returns your entry
 - [ ] (Optional) NORTH Jupyter notebook opens and reads the data

@@ -83,7 +83,7 @@ Answer the prompts:
 | `reader_name` | `workshop` |
 | `supported_nxdl` | `NXdouble_slit` |
 | `technique` | `Double slit` |
-| `reader` | `DoubleSlitReader` |
+| `reader_class` | `DoubleSlitReader` |
 | `Author's full name` | Your name |
 | `Author's email address` | Your email or empty |
 | `Any other prompt` | Go with the default |
