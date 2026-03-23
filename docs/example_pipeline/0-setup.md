@@ -72,7 +72,7 @@ We are creating a `pynxtools` reader plugin, i.e., a converter from raw data to 
 The workshop uses a special `workshop` branch of the plugin template that gives you a pre-structured reader skeleton with exercise stubs.
 
 ```bash
-pip install cookiecutter
+uv pip install cookiecutter
 cookiecutter gh:FAIRmat-NFDI/pynxtools-plugin-template --checkout bessy-datathon
 ```
 
@@ -88,10 +88,10 @@ Answer the prompts:
 | `Author's email address` | Your email or empty |
 | `Any other prompt` | Go with the default |
 
-This creates a directory called `pynxtools-example/` (or whatever name you chose).
+This creates a directory called `pynxtools-workshop/` (or whatever name you chose).
 
 ```bash
-cd pynxtools-example
+cd pynxtools-workshop
 uv pip install -e ".[dev]"
 ```
 
@@ -115,10 +115,12 @@ The example data lives inside your plugin under `tests/data/`:
 
 ```bash
 ls tests/data/
-# mock_data.h5   eln_data.yaml   config_file.json   create_mock_data.py
+# mock_data.h5   eln_data.yaml   config_file.json   create_mock_data.py   README.md
 ```
 
-Explore the HDF5 file. Open a new Python file (e.g. `explore_data.py`) and run:
+Explore the HDF5 file. You can have a look at the HDF5 file using the `h5web` extension in VS Code.
+
+Alternatively, open a new Python file (e.g. `explore_data.py`) and run:
 
 ```python
 import h5py
@@ -129,8 +131,6 @@ with h5py.File("tests/data/mock_data.h5", "r") as f:
 
 You should see paths like `data/detector_data`, `data/x_pixels`, `data/interference_data`,
 and `metadata/instrument/source/wavelength`.
-
-Alternatively, you can have a look at the HDF5 file using the `h5web` extension in VS Code.
 
 ---
 
