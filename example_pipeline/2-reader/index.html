@@ -1,0 +1,1640 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Hands-on workshop: Standardizing materials science data with NeXus, pynxtools, and NOMAD.
+">
+      
+      
+        <meta name="author" content="BESSY II Datathon Team">
+      
+      
+      
+        <link rel="prev" href="../1-appdef/">
+      
+      
+        <link rel="next" href="../3-nomad/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+    
+    
+      
+        <title>2 — Creating a pynxtools reader - BESSY II Datathon 2026</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#session-2-build-a-pynxtools-reader" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="BESSY II Datathon 2026" class="md-header__button md-logo" aria-label="BESSY II Datathon 2026" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BESSY II Datathon 2026
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2 — Creating a pynxtools reader
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hz-b/2026_BESSYII_Datathon" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="BESSY II Datathon 2026" class="md-nav__button md-logo" aria-label="BESSY II Datathon 2026" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BESSY II Datathon 2026
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hz-b/2026_BESSYII_Datathon" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nexus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A primer on NeXus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building an example pipeline
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Building an example pipeline
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0 — Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-appdef/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1 — Writing a simple application definition
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2 — Creating a pynxtools reader
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2 — Creating a pynxtools reader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-a-reader-fits-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How a reader fits in
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-reader-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The reader class
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-you-start-explore-the-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before you start — explore the data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-1-handle_hdf5_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 1 — handle_hdf5_file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-2-understand-handle_eln_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 2 — understand handle_eln_file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-tokens-and-callbacks-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How tokens and callbacks work
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-3-get_attr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 3 — get_attr
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-4-get_eln_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 4 — get_eln_data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-5-get_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 5 — get_data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checkpoint-test-the-callbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Checkpoint — test the callbacks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-6-write-the-config-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 6 — Write the config file
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercise 6 — Write the config file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-generate-the-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — generate the template
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-fill-in-the-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — fill in the values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-the-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Run the conversion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solution-and-correct-nexus-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Solution and correct NeXus file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Further reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-nomad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3 — Uploading to NOMAD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Challenges
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Challenges
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../challenges/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0 — Overview and setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../challenges/01-populate-nxdata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1 — Populate NXdata & NXuser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../challenges/02-nxfluo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2 — Convert to NXfluo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../challenges/03-nxmonopd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3 — Convert to NXmonopd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../challenges/04-multimodal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4 — Multimodal application definition
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../your-own-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Working with your own data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-a-reader-fits-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How a reader fits in
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-reader-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The reader class
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-you-start-explore-the-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before you start — explore the data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-1-handle_hdf5_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 1 — handle_hdf5_file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-2-understand-handle_eln_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 2 — understand handle_eln_file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-tokens-and-callbacks-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How tokens and callbacks work
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-3-get_attr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 3 — get_attr
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-4-get_eln_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 4 — get_eln_data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-5-get_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 5 — get_data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checkpoint-test-the-callbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Checkpoint — test the callbacks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-6-write-the-config-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 6 — Write the config file
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercise 6 — Write the config file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-generate-the-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — generate the template
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-fill-in-the-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — fill in the values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-the-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Run the conversion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solution-and-correct-nexus-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Solution and correct NeXus file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Further reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="session-2-build-a-pynxtools-reader">Session 2 — Build a pynxtools reader<a class="headerlink" href="#session-2-build-a-pynxtools-reader" title="Permanent link">&para;</a></h1>
+<p><strong>Duration:</strong> 1 hour</p>
+<p><strong>Goal:</strong> Implement a small reader plugin that converts a mock HDF5 instrument file + a YAML metadata file into a validated NeXus output conforming to <code>NXdouble_slit</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This session contains a lot of information and exercises. The goal is of course to work through all of them, but depending on your familiarity with Python and NeXus/<code>pynxtools</code>, you may need longer.</p>
+<p>Try not to spend too much time with any step. There will be solutions given if you are stuck.</p>
+<p>There will be a fully filled NeXus file waiting at the end that you can use in Session 3, regardless of how far you make it here.     </p>
+</div>
+<hr />
+<h2 id="how-a-reader-fits-in">How a reader fits in<a class="headerlink" href="#how-a-reader-fits-in" title="Permanent link">&para;</a></h2>
+<p>Here, we are building a small reader that writes a NeXus file compliant with <code>NXdouble_slit</code>. We are using the <code>MultiFormatReader</code> from <code>pynxtools</code>.</p>
+<p>The architecture of the reader we want to build looks like this:</p>
+<div class="highlight"><pre><span></span><code>mock_data.h5     --&gt; handle_hdf5_file() --&gt; self.hdf5_data --+
+eln_data.yaml    --&gt; handle_eln_file()  --&gt; self.eln_data  --+
+                                                             |
+config_file.json &lt;-------------------------------------------+
+      |
+      |  &quot;@attrs:some/path&quot;  --&gt; get_attr(key, path)
+      |  &quot;@eln&quot;              --&gt; get_eln_data(key, path)
+      |  &quot;@data:array_name&quot;  --&gt; get_data(key, path)
+      |
+      v
+  output.nxs  (validated against NXdouble_slit)
+</code></pre></div>
+<p>The idea is to separate the reading into three steps:</p>
+<ol>
+<li>parsing raw measurement and ELN data (<code>handle_hdf5_file</code>, <code>handle_eln_file</code>)</li>
+<li>mapping to NeXus data using a config file (<code>config_file.json</code>) and special callback methods ( <code>get_attr</code>, <code>get_eln_data</code>, <code>get_data</code>)</li>
+<li>writing the resulting NeXus HDF5 file. </li>
+</ol>
+<p>The <code>MultiFormatReader</code> provides all the plumbing. You write the methods that know about your specific data.</p>
+<hr />
+<h2 id="the-reader-class">The reader class<a class="headerlink" href="#the-reader-class" title="Permanent link">&para;</a></h2>
+<p>Open <code>src/pynxtools_workshop/reader.py</code>. You will find the <code>DoubleSlitReader</code> class, which
+inherits from <code>MultiFormatReader</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">DoubleSlitReader</span><span class="p">(</span><span class="n">MultiFormatReader</span><span class="p">):</span>
+
+    <span class="n">supported_nxdls</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NXdouble_slit&quot;</span><span class="p">]</span>
+
+    <span class="n">CONVERT_DICT</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;instrument&quot;</span><span class="p">:</span> <span class="s2">&quot;INSTRUMENT[instrument]&quot;</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hdf5_data</span> <span class="o">=</span> <span class="kc">None</span>   <span class="c1"># populated by handle_hdf5_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eln_data</span>  <span class="o">=</span> <span class="kc">None</span>   <span class="c1"># populated by handle_eln_file</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">extensions</span> <span class="o">=</span> <span class="p">{</span>     <span class="c1"># routes each input file to its handler</span>
+            <span class="s2">&quot;.h5&quot;</span><span class="p">:</span>   <span class="bp">self</span><span class="o">.</span><span class="n">handle_hdf5_file</span><span class="p">,</span>   <span class="c1"># ← you implement this (Exercise 1)</span>
+            <span class="s2">&quot;.yaml&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_eln_file</span><span class="p">,</span>    <span class="c1"># ← already implemented</span>
+            <span class="s2">&quot;.json&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_config_file</span><span class="p">,</span>    <span class="c1"># ← provided by MultiFormatReader</span>
+        <span class="p">}</span>
+
+    <span class="c1"># ── file handlers ──────────────────────────────────────────────────</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_hdf5_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span> <span class="o">...</span>   <span class="c1"># Exercise 1 — you implement</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_eln_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>  <span class="o">...</span>   <span class="c1"># already implemented</span>
+
+    <span class="c1"># ── callbacks — called by the framework for each @token in config ──</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_eln_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span> <span class="o">...</span>       <span class="c1"># Exercise 4 — you implement</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>     <span class="o">...</span>       <span class="c1"># Exercise 3 — you implement</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>     <span class="o">...</span>       <span class="c1"># Exercise 5 — you implement</span>
+</code></pre></div>
+<p><strong>What <code>MultiFormatReader</code> does for you:</strong></p>
+<ol>
+<li>Calls each handler registered in <code>self.extensions</code> for the matching input file.</li>
+<li>Reads <code>config_file.json</code> and resolves every <code>@token</code> value by calling the matching callback on your class.</li>
+<li>Writes the assembled dictionary to the output <code>.nxs</code> file and validates it against <code>NXdouble_slit</code>.</li>
+</ol>
+<p><strong>What you implement:</strong></p>
+<ul>
+<li><code>handle_hdf5_file</code> — load the HDF5 file and store a flat <code>{path: value}</code> dict on <code>self.hdf5_data</code> so that callbacks can look values up later.</li>
+<li><code>get_attr</code>, <code>get_eln_data</code>, <code>get_data</code> — retrieve individual values when the framework resolves each token in the config file.</li>
+</ul>
+<hr />
+<h2 id="before-you-start-explore-the-data">Before you start — explore the data<a class="headerlink" href="#before-you-start-explore-the-data" title="Permanent link">&para;</a></h2>
+<p>Have a look at the data files <code>in tests/data/</code>. Either use VS Code (using the <code>h5web</code> extension ) or do it programatically:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span><span class="o">,</span><span class="w"> </span><span class="nn">yaml</span>
+
+<span class="c1"># Inspect the HDF5 file</span>
+<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s2">&quot;tests/data/mock_data.h5&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">visititems</span><span class="p">(</span><span class="k">lambda</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;→&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+
+<span class="c1"># Inspect the ELN YAML</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;tests/data/eln_data.yaml&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+</code></pre></div>
+<p>Have a look what <code>NXdouble_slit</code> defines/requires:</p>
+<div class="highlight"><pre><span></span><code>dataconverter<span class="w"> </span>generate-template<span class="w"> </span>--nxdl<span class="w"> </span>NXdouble_slit
+dataconverter<span class="w"> </span>generate-template<span class="w"> </span>--nxdl<span class="w"> </span>NXdouble_slit<span class="w"> </span>--required
+</code></pre></div>
+<hr />
+<h2 id="exercise-1-handle_hdf5_file">Exercise 1 — <code>handle_hdf5_file</code><a class="headerlink" href="#exercise-1-handle_hdf5_file" title="Permanent link">&para;</a></h2>
+<p><strong>Goal:</strong> Load the HDF5 file into <code>self.hdf5_data</code> as a flat dictionary <code>{path: value}</code>.</p>
+<p>The result is stored on <code>self</code> so that the callback methods (<code>get_attr</code>, <code>get_data</code>) can look up values from it later when the framework processes the config file.</p>
+<p>By default, <code>handle_...</code> shall return a dictionary (for reasons we will not go into here). We will just return an empty dict here.</p>
+<p>Open <code>src/pynxtools_workshop/reader.py</code>. The stub looks like this:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">handle_hdf5_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load HDF5 data into self.hdf5_data as a flat dict {path: value}.&quot;&quot;&quot;</span>
+    <span class="c1"># TODO: implement</span>
+    <span class="k">return</span> <span class="p">{}</span>
+</code></pre></div>
+<p>Implement it using h5py.</p>
+<p>You can test your solution by running:</p>
+<div class="highlight"><pre><span></span><code><span class="n">r</span> <span class="o">=</span> <span class="n">DoubleSlitReader</span><span class="p">()</span>
+<span class="n">r</span><span class="o">.</span><span class="n">handle_hdf5_file</span><span class="p">(</span><span class="s2">&quot;tests/data/mock_data.h5&quot;</span><span class="p">)</span>
+</code></pre></div>
+<details class="tip">
+<summary>Tip</summary>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">collect</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="c1"># TODO: implement collection logic here</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">visititems</span><span class="p">(</span><span class="n">collect</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">hdf5_data</span> <span class="o">=</span> <span class="n">result</span>
+</code></pre></div>
+</details>
+<details class="success">
+<summary>Full solution</summary>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">handle_hdf5_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span>
+    <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">collect</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">h5py</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[()]</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">visititems</span><span class="p">(</span><span class="n">collect</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">hdf5_data</span> <span class="o">=</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="p">{}</span>
+</code></pre></div>
+</details>
+<p><strong>Check:</strong> print <code>self.hdf5_data.keys()</code> — you should see paths like <code>data/detector_data</code>, <code>data/x_pixels</code>, <code>metadata/instrument/source/wavelength</code>, etc.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>It may seem unintuitive to first parse the HDF5 data, transform it, and then write it back to a NeXus file. We are doing this for learning purposes only; if you want to either transfer or link data from an HDF5 file to a NeXus file, <code>pynxtools</code> provides a specialized reader (called <a href="https://fairmat-nfdi.github.io/pynxtools/reference/built-in-readers.html#the-jsonmapreader" rel="noopener" target="_blank"><code>JsonMap</code></a>). You will learn more about it in the challenges on day 2.</p>
+</div>
+<hr />
+<h2 id="exercise-2-understand-handle_eln_file">Exercise 2 — understand <code>handle_eln_file</code><a class="headerlink" href="#exercise-2-understand-handle_eln_file" title="Permanent link">&para;</a></h2>
+<p><strong>Goal:</strong> Understand how we load the ELN YAML file and convert it to flat template paths using <code>parse_yml</code>.</p>
+<p>Not all metadata concepts defined in <code>NXdouble_slit</code> can be filled from the HDF5 file. We will add an additional metadata file. We call this the ELN file, since this is data typically recorded in an electronic lab notebook (ELN).</p>
+<p>The ELN YAML uses lowercase keys that mirror the NeXus path structure:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Double-slit interference experiment</span>
+<span class="nt">start_time</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2026-03-22T10:00:00+01:00&quot;</span>
+<span class="nt">instrument</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">source</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Laser</span>
+<span class="w">  </span><span class="nt">double_slit</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">material</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aluminum</span>
+</code></pre></div>
+<p>We have already implemented the method for parsing YAML ELN files in <code>reader.py</code>. It is called automatically by <code>MultiFormatReader</code> because <code>.yaml</code> is registered in <code>self.extensions</code>. The implementation uses <code>parse_yml</code> from <code>pynxtools</code>, which parses the YAML file and wraps everything under <code>/ENTRY[entry]/…</code>. Keys that differ from the NeXus path name must be listed in <code>CONVERT_DICT</code>. Here only <code>instrument</code> needs renaming:</p>
+<div class="highlight"><pre><span></span><code><span class="n">CONVERT_DICT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;instrument&quot;</span><span class="p">:</span> <span class="s2">&quot;INSTRUMENT[instrument]&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This is the function that we implemented:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pynxtools.dataconverter.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_yml</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">handle_eln_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eln_data</span> <span class="o">=</span> <span class="n">parse_yml</span><span class="p">(</span>
+        <span class="n">file_path</span><span class="p">,</span>
+        <span class="n">convert_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">CONVERT_DICT</span><span class="p">,</span>
+        <span class="n">parent_key</span><span class="o">=</span><span class="s2">&quot;/ENTRY[entry]&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+<p>Try to understand what it would produce, i.e., how <code>self.eln_data</code> would look like.</p>
+<details class="success">
+<summary>Full solution</summary>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="s2">&quot;/ENTRY[entry]/title&quot;</span><span class="p">:</span> <span class="s2">&quot;Double-slit interference experiment&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;/ENTRY[entry]/INSTRUMENT[instrument]/source/type&quot;</span><span class="p">:</span> <span class="s2">&quot;Laser&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;/ENTRY[entry]/INSTRUMENT[instrument]/double_slit/material&quot;</span><span class="p">:</span> <span class="s2">&quot;aluminum&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+<p>You can test the function by running:</p>
+<div class="highlight"><pre><span></span><code><span class="n">r</span> <span class="o">=</span> <span class="n">DoubleSlitReader</span><span class="p">()</span>
+<span class="n">r</span><span class="o">.</span><span class="n">handle_eln_file</span><span class="p">(</span><span class="s2">&quot;tests/data/eln_data.yaml&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="how-tokens-and-callbacks-work">How tokens and callbacks work<a class="headerlink" href="#how-tokens-and-callbacks-work" title="Permanent link">&para;</a></h2>
+<p>Before implementing the callbacks, it is important to understand how they are called.</p>
+<p>Each value in <code>config_file.json</code> is either a literal (e.g. <code>"NXdouble_slit"</code>) or a <strong>token</strong>
+starting with <code>@</code>. When <code>MultiFormatReader</code> processes the config file, it resolves each token
+by calling a method on your reader class:</p>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Framework calls</th>
+<th>Argument passed as <code>path</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"@eln"</code></td>
+<td><code>get_eln_data(key, path)</code></td>
+<td>empty string — look up by <code>key</code> instead</td>
+</tr>
+<tr>
+<td><code>"@attrs:some/hdf5/path"</code></td>
+<td><code>get_attr(key, path)</code></td>
+<td><code>"some/hdf5/path"</code></td>
+</tr>
+<tr>
+<td><code>"@data:array_name"</code></td>
+<td><code>get_data(key, path)</code></td>
+<td><code>"array_name"</code></td>
+</tr>
+</tbody>
+</table>
+<p>In every case, <code>key</code> is the full NeXus template path — the left-hand side of the config entry.
+<code>path</code> is the token suffix after the <code>:</code>.</p>
+<p>This asymmetry is why <code>get_eln_data</code> looks up by <code>key</code> (because <code>parse_yml</code> already stored
+values under full template paths) while <code>get_attr</code> and <code>get_data</code> look up by <code>path</code> (because
+the HDF5 flat dict uses the raw HDF5 path as its key).</p>
+<hr />
+<h2 id="exercise-3-get_attr">Exercise 3 — <code>get_attr</code><a class="headerlink" href="#exercise-3-get_attr" title="Permanent link">&para;</a></h2>
+<p><strong>Goal:</strong> Return instrument metadata from <code>self.hdf5_data</code> by <code>path</code>.</p>
+<p>The config file will contain entries like:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&quot;/ENTRY[entry]/INSTRUMENT[instrument]/source/wavelength&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@attrs:metadata/instrument/source/wavelength&quot;</span>
+</code></pre></div>
+<p>When the reader sees <code>@attrs:metadata/instrument/source/wavelength</code>, it calls:</p>
+<div class="highlight"><pre><span></span><code><span class="n">get_attr</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;/ENTRY[entry]/.../wavelength&quot;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;metadata/instrument/source/wavelength&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Implement <code>get_attr</code> to look up <code>path</code> in <code>self.hdf5_data</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="c1"># TODO: implement</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<details class="success">
+<summary>Full solution</summary>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdf5_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdf5_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h2 id="exercise-4-get_eln_data">Exercise 4 — <code>get_eln_data</code><a class="headerlink" href="#exercise-4-get_eln_data" title="Permanent link">&para;</a></h2>
+<p><strong>Goal:</strong> Return metadata from <code>self.eln_data</code> by the full NeXus template path (<code>key</code>).</p>
+<p>For ELN data, <code>parse_yml</code> already produces flat dictionary keys that are full template paths. So look up by <code>key</code>, not <code>path</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_eln_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="c1"># TODO: implement</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<details class="success">
+<summary>Full solution</summary>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_eln_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">eln_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eln_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h2 id="exercise-5-get_data">Exercise 5 — <code>get_data</code><a class="headerlink" href="#exercise-5-get_data" title="Permanent link">&para;</a></h2>
+<p><strong>Goal:</strong> Return measurement arrays from <code>self.hdf5_data</code>.</p>
+<p>Data arrays live under <code>data/</code> in the HDF5 file. For example, <code>data/detector_data</code>, <code>data/x_offset</code>, and <code>data/interference_data</code>. The <code>path</code> argument is the dataset name inside <code>data/</code>, so look up <code>f"data/{path}"</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="c1"># TODO: implement</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<details class="success">
+<summary>Full solution</summary>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdf5_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdf5_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;data/</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h2 id="checkpoint-test-the-callbacks">✅ Checkpoint — test the callbacks<a class="headerlink" href="#checkpoint-test-the-callbacks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pynxtools_workshop.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoubleSlitReader</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">DoubleSlitReader</span><span class="p">()</span>
+<span class="n">r</span><span class="o">.</span><span class="n">handle_hdf5_file</span><span class="p">(</span><span class="s2">&quot;tests/data/mock_data.h5&quot;</span><span class="p">)</span>
+<span class="n">r</span><span class="o">.</span><span class="n">handle_eln_file</span><span class="p">(</span><span class="s2">&quot;tests/data/eln_data.yaml&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get_attr</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;metadata/instrument/source/wavelength&quot;</span><span class="p">))</span>  <span class="c1"># → 532.0</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get_eln_data</span><span class="p">(</span><span class="s2">&quot;/ENTRY[entry]/title&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>                 <span class="c1"># → Double-slit interference experiment</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;detector_data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>                     <span class="c1"># → (200, 100)</span>
+</code></pre></div>
+<hr />
+<h2 id="exercise-6-write-the-config-file">Exercise 6 — Write the config file<a class="headerlink" href="#exercise-6-write-the-config-file" title="Permanent link">&para;</a></h2>
+<p>The config file is the <strong>semantic bridge</strong> between your data and the NeXus template. Each key is a template path; each value tells the reader where to find the data.</p>
+<p>If a callback returns <code>None</code> for a given key, that path is left unfilled. Required paths that remain <code>None</code> will trigger a validation warning or error; optional paths are silently skipped.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Writing config files requires understanding their logic. You will likely not be able to fill out the whole config file in time. There is a prefilled <code>config_file.json</code> in <code>tests/data</code> that you can use.</p>
+</div>
+<h3 id="step-1-generate-the-template">Step 1 — generate the template<a class="headerlink" href="#step-1-generate-the-template" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>dataconverter<span class="w"> </span>generate-template<span class="w"> </span>--nxdl<span class="w"> </span>NXdouble_slit<span class="w"> </span>&gt;&gt;<span class="w"> </span>config_file.json
+</code></pre></div>
+<h3 id="step-2-fill-in-the-values">Step 2 — fill in the values<a class="headerlink" href="#step-2-fill-in-the-values" title="Permanent link">&para;</a></h3>
+<p>For each required or recommended path, decide how to fill it:</p>
+<table>
+<thead>
+<tr>
+<th>Data source</th>
+<th>Config value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HDF5 metadata</td>
+<td><code>"@attrs:metadata/instrument/source/wavelength"</code></td>
+</tr>
+<tr>
+<td>ELN YAML</td>
+<td><code>"@eln"</code></td>
+</tr>
+<tr>
+<td>Measurement array</td>
+<td><code>"@data:detector_data"</code></td>
+</tr>
+<tr>
+<td>Fixed literal</td>
+<td><code>"NXdouble_slit"</code></td>
+</tr>
+</tbody>
+</table>
+<p>Example config fragment:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;/ENTRY[entry]/definition&quot;</span><span class="p">:</span><span class="s2">&quot;NXdouble_slit&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;/ENTRY[entry]/title&quot;</span><span class="p">:</span><span class="s2">&quot;@eln&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;/ENTRY[entry]/start_time&quot;</span><span class="p">:</span><span class="s2">&quot;@eln&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;/ENTRY[entry]/INSTRUMENT[instrument]/source/wavelength&quot;</span><span class="p">:</span><span class="s2">&quot;@attrs:metadata/instrument/source/wavelength&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;/ENTRY[entry]/INSTRUMENT[instrument]/source/wavelength/@units&quot;</span><span class="p">:</span><span class="s2">&quot;nm&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;/ENTRY[entry]/INSTRUMENT[instrument]/detector/DATA[data]/data&quot;</span><span class="p">:</span><span class="s2">&quot;@data:detector_data&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;/ENTRY[entry]/interference_pattern/data&quot;</span><span class="p">:</span><span class="s2">&quot;@data:interference_data&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;/ENTRY[entry]/interference_pattern/x_offset&quot;</span><span class="p">:</span><span class="s2">&quot;@data:x_offset&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;/ENTRY[entry]/interference_pattern/x_offset/@units&quot;</span><span class="p">:</span><span class="s2">&quot;mm&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>You can find the full solution in <code>tests/data/config_file.json</code>.</p>
+<h2 id="run-the-conversion">✅ Run the conversion<a class="headerlink" href="#run-the-conversion" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>dataconverter<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--reader<span class="w"> </span>workshop<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--nxdl<span class="w"> </span>NXdouble_slit<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--config<span class="w"> </span>tests/data/config_file.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>output.nxs
+<span class="w">  </span>tests/data/mock_data.h5<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>tests/data/eln_data.yaml<span class="w"> </span><span class="se">\</span>
+</code></pre></div>
+<p>Inspect the result. Use either <code>h5web</code> in VS Code or run:</p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<span class="s2">import h5py</span>
+<span class="s2">with h5py.File(&#39;output.nxs&#39;, &#39;r&#39;) as f:</span>
+<span class="s2">    f.visititems(lambda n, obj: print(n))</span>
+<span class="s2">&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="solution-and-correct-nexus-file">✅ Solution and correct NeXus file<a class="headerlink" href="#solution-and-correct-nexus-file" title="Permanent link">&para;</a></h2>
+<p>You can find the full reader implementation here:</p>
+<p><a class="md-button" href="https://github.com/hz-b/2026_BESSYII_Datathon/blob/main/results/reference/reader.py" target="_blank"><code>reader.py</code></a></p>
+<p>As promised at the top, you can continue to the next session even if you have not yet finished writing the reader or the config file. Download the final NeXus file here:</p>
+<p><a class="md-button" href="https://raw.githubusercontent.com/hz-b/2026_BESSYII_Datathon/main/results/reference/output.nxs" target="_blank">Download output.nxs</a></p>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Exercise</th>
+<th>What you built</th>
+<th>Key concept</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>handle_hdf5_file</code></td>
+<td>Flat dict from HDF5</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>handle_eln_file</code> + <code>CONVERT_DICT</code></td>
+<td><code>parse_yml</code> maps YAML → template paths</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>get_attr</code></td>
+<td><code>@attrs:path</code> dispatch</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>get_eln_data</code></td>
+<td><code>@eln</code> dispatch uses <code>key</code>, not <code>path</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>get_data</code></td>
+<td><code>@data:name</code> dispatch</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>config_file.json</code></td>
+<td>Semantic mapping: source → NeXus</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="further-reading">Further reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><a href="https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/build-a-plugin" rel="noopener" target="_blank">pynxtools how-to &gt; Build a plugin</a></p>
+</li>
+<li>
+<p><a href="https://fairmat-nfdi.github.io/pynxtools/tutorial/build-a-reader" rel="noopener" target="_blank">pynxtools tutorial &gt; Build your first reader</a></p>
+</li>
+<li><a href="https://fairmat-nfdi.github.io/pynxtools/how-tos/pynxtools/use-multi-format-reader" rel="noopener" target="_blank">pynxtools how-to &gt; Use the MultiFormatReader</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
