@@ -21,3 +21,6 @@ The input parameters are defined as follows:
 
 **output**: The output filename of the NeXus file.
 
+# How to run dataconverter (pynxtools >=v0.13.0)
+
+`dataconverter --nxdl NXapp-def  data.h5 eln.yaml -c config.json --output my_nexus.nxs` 
