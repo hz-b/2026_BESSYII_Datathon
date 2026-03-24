@@ -1,0 +1,1584 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Hands-on workshop: Standardizing materials science data with NeXus, pynxtools, and NOMAD.
+">
+      
+      
+        <meta name="author" content="BESSY II Datathon Team">
+      
+      
+      
+        <link rel="prev" href="../0-setup/">
+      
+      
+        <link rel="next" href="../2-reader/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+    
+    
+      
+        <title>1 — Writing a simple application definition - BESSY II Datathon 2026</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#session-1-write-your-first-application-definition" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="BESSY II Datathon 2026" class="md-header__button md-logo" aria-label="BESSY II Datathon 2026" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BESSY II Datathon 2026
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              1 — Writing a simple application definition
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hz-b/2026_BESSYII_Datathon" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="BESSY II Datathon 2026" class="md-nav__button md-logo" aria-label="BESSY II Datathon 2026" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BESSY II Datathon 2026
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hz-b/2026_BESSYII_Datathon" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nexus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A primer on NeXus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building an example pipeline
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Building an example pipeline
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0 — Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1 — Writing a simple application definition
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1 — Writing a simple application definition
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-a-double-slit-experiment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why a double-slit experiment?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-data-model-we-want-to-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The data model we want to build
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-0-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0 — Tools
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 0 — Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        nyaml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pynxtools-dataconverter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pynxtools dataconverter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-skeleton" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Skeleton
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-instrument-and-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Instrument and source
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-slit-and-detector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Slit and detector
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-optional-processing-default-plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Optional processing + default plot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4 — Optional processing + default plot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optional-processing-provenance-uses-nametypepartial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional processing provenance (uses nameType="partial")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default plot
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Validate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-specialize-a-base-class-bonus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced: specialize a base class (bonus)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-how-to-add-your-definition-to-pynxtools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix: How to add your definition to pynxtools
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Further reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-reader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2 — Creating a pynxtools reader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-nomad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3 — Uploading to NOMAD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Challenges
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Challenges
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../challenges/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0 — Overview and setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../challenges/01-populate-nxdata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1 — Populate NXdata & NXuser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../challenges/02-nxfluo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2 — Convert to NXfluo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../challenges/03-nxmonopd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3 — Convert to NXmonopd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../challenges/04-multimodal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4 — Multimodal application definition
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../your-own-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Working with your own data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-a-double-slit-experiment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why a double-slit experiment?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-data-model-we-want-to-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The data model we want to build
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-0-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0 — Tools
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 0 — Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        nyaml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pynxtools-dataconverter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pynxtools dataconverter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-skeleton" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Skeleton
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-instrument-and-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Instrument and source
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-slit-and-detector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Slit and detector
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-optional-processing-default-plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Optional processing + default plot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4 — Optional processing + default plot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optional-processing-provenance-uses-nametypepartial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional processing provenance (uses nameType="partial")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default plot
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Validate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-specialize-a-base-class-bonus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced: specialize a base class (bonus)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-how-to-add-your-definition-to-pynxtools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix: How to add your definition to pynxtools
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Further reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="session-1-write-your-first-application-definition">Session 1 — Write your first application definition<a class="headerlink" href="#session-1-write-your-first-application-definition" title="Permanent link">&para;</a></h1>
+<p><strong>Duration:</strong> 1 hour</p>
+<p><strong>Goal:</strong> Create <code>NXdouble_slit</code> — a complete, valid application definition for the <a href="https://en.wikipedia.org/wiki/Double-slit_experiment" rel="noopener" target="_blank">double-slit experiment</a> — starting from a blank YAML file.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>We will go through this example for writing an application definition rather quickly. If you want to later similar material at a more incremental later, you can have a look at the <code>pynxtools</code> tutorial for writing an application definition: </p>
+<p><a href="https://fairmat-nfdi.github.io/pynxtools/tutorial/writing-an-application-definition.html" rel="noopener" target="_blank"><code>pynxtools</code> &gt; Tutorial &gt; Writing your first application definition</a></p>
+<p>Each step you will see in this guide is already pre-defined and ready to be copied. For each step, try to understand what the individual concepts are and how the notation works before you copy the snippets to your application definition.</p>
+</div>
+<hr />
+<h2 id="why-a-double-slit-experiment">Why a double-slit experiment?<a class="headerlink" href="#why-a-double-slit-experiment" title="Permanent link">&para;</a></h2>
+<p>It's physically simple (one source, two slits, one detector), but captures every structural challenge in data modelling:</p>
+<ul>
+<li>Instrument geometry (distances, gaps)</li>
+<li>A 2D measurement array with calibrated axes</li>
+<li>A distinction between raw and processed data</li>
+<li>Optional metadata (material, coherence length)</li>
+</ul>
+<p>The skills you learn here transfer directly to XPS, MPES, reflectometry, or any other technique.</p>
+<hr />
+<h2 id="the-data-model-we-want-to-build">The data model we want to build<a class="headerlink" href="#the-data-model-we-want-to-build" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>NXentry
+ ├── definition = &quot;NXdouble_slit&quot;
+ ├── title, start_time, end_time
+ ├── NXinstrument
+ │   ├── source(NXsource)
+ │   │   ├── wavelength  [NX_WAVELENGTH]
+ │   │   ├── coherence_length  [NX_LENGTH, recommended]
+ │   │   └── type  [Laser | Filtered lamp | LED, optional]
+ │   ├── double_slit(NXslit)
+ │   │   ├── x_gap, slit_separation  [NX_LENGTH]
+ │   │   └── height, material  [optional]
+ │   └── detector(NXdetector)
+ └── interference_pattern(NXdata)  ← calibrated default plot
+     ├── data  dims (n_x, n_y)
+     ├── x_offset  [NX_LENGTH]
+     └── y_offset  [NX_LENGTH]
+</code></pre></div>
+<ul>
+<li><strong><code>interference_pattern</code></strong> contains spatial axes (mm from centre). This is the used as the default plot by NOMAD and other viewers.</li>
+</ul>
+<p>Note that the <code>NXdouble_slit</code> application definition is already part of <code>pynxtools</code>. We will still build it from scratch here, but this will help us with using it directly, without needing to manually inject it there.</p>
+<hr />
+<h2 id="step-0-tools">Step 0 — Tools<a class="headerlink" href="#step-0-tools" title="Permanent link">&para;</a></h2>
+<h3 id="nyaml">nyaml<a class="headerlink" href="#nyaml" title="Permanent link">&para;</a></h3>
+<p>NeXus definitions must follow the <a href="https://manual.nexusformat.org/nxdl.html" rel="noopener" target="_blank">NXDL language</a>. Typically, they are written in XML. Here, we are using a simpler YAML notation. The <a href="https://github.com/FAIRmat-NFDI/nyaml" rel="noopener" target="_blank"><code>nyaml</code> tool</a> you installed earlier will help us losslessly convert between YAML and XML.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Convert YAML ↔ NXDL XML</span>
+nyaml2nxdl<span class="w"> </span>NXdouble_slit.yaml<span class="w"> </span>--output-file<span class="w"> </span>NXdouble_slit.nxdl.xml
+nxdl2nyaml<span class="w"> </span>NXdouble_slit.nxdl.xml<span class="w"> </span>--output-file<span class="w"> </span>NXdouble_slit.yaml
+</code></pre></div>
+<h3 id="pynxtools-dataconverter">pynxtools dataconverter<a class="headerlink" href="#pynxtools-dataconverter" title="Permanent link">&para;</a></h3>
+<p>Generate a template JSON showing all required paths:
+<div class="highlight"><pre><span></span><code>dataconverter<span class="w"> </span>generate-template<span class="w"> </span>--nxdl<span class="w"> </span>NXdouble_slit
+</code></pre></div></p>
+<hr />
+<h2 id="step-1-skeleton">Step 1 — Skeleton<a class="headerlink" href="#step-1-skeleton" title="Permanent link">&para;</a></h2>
+<p>Create <code>NXdouble_slit.yaml</code> in a new working directory:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">category</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application</span>
+<span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">Application definition for a double-slit interference experiment.</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group</span>
+<span class="nt">NXdouble_slit(NXobject)</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">(NXentry)</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">definition</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enumeration</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">NXdouble_slit</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">title</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">start_time(NX_DATE_TIME)</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">ISO 8601 datetime of the measurement start.</span>
+</code></pre></div>
+<p>You can see its XML representation by running the converter:</p>
+<div class="highlight"><pre><span></span><code>nyaml2nxdl<span class="w"> </span>NXdouble_slit.yaml<span class="w"> </span>--output-file<span class="w"> </span>NXdouble_slit.nxdl.xml
+</code></pre></div>
+<hr />
+<h2 id="step-2-instrument-and-source">Step 2 — Instrument and source<a class="headerlink" href="#step-2-instrument-and-source" title="Permanent link">&para;</a></h2>
+<p>Add the instrument and light source inside <code>(NXentry)</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nt">(NXinstrument)</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">source(NXsource)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">wavelength(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_WAVELENGTH</span>
+<span class="w">          </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">Central wavelength of the light source.</span>
+<span class="w">        </span><span class="nt">coherence_length(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_LENGTH</span>
+<span class="w">          </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">recommended</span>
+<span class="w">          </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">Temporal coherence length — determines fringe visibility.</span>
+<span class="w">        </span><span class="nt">type(NX_CHAR)</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optional</span>
+<span class="w">          </span><span class="nt">enumeration</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Laser</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Filtered lamp</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">LED</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Unit categories</p>
+<p><code>unit: NX_WAVELENGTH</code> is a <em>category</em>, not a unit. It says the field must store a wavelength-equivalent quantity (nm, Å, µm, …). The actual unit is written by the file producer as an HDF5 attribute <code>wavelength/@units</code>.</p>
+</div>
+<hr />
+<h2 id="step-3-slit-and-detector">Step 3 — Slit and detector<a class="headerlink" href="#step-3-slit-and-detector" title="Permanent link">&para;</a></h2>
+<p>Add the slit and detector inside <code>(NXinstrument)</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="w">      </span><span class="nt">double_slit(NXslit)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">x_gap(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_LENGTH</span>
+<span class="w">          </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">Width of each individual slit.</span>
+<span class="w">        </span><span class="nt">slit_separation(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_LENGTH</span>
+<span class="w">          </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">Center-to-center distance between the two slits.</span>
+<span class="w">        </span><span class="nt">height(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optional</span>
+<span class="w">          </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_LENGTH</span>
+<span class="w">          </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">Height of the two slits.</span>
+<span class="w">      </span><span class="nt">detector(NXdetector)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">distance(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_LENGTH</span>
+<span class="w">          </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Distance from the slit plane to the detector surface.</span>
+</code></pre></div>
+<hr />
+<h2 id="step-4-optional-processing-default-plot">Step 4 — Optional processing + default plot<a class="headerlink" href="#step-4-optional-processing-default-plot" title="Permanent link">&para;</a></h2>
+<p>Add these two groups as siblings of <code>(NXinstrument)</code> inside <code>(NXentry)</code>.</p>
+<h3 id="optional-processing-provenance-uses-nametypepartial">Optional processing provenance (uses <code>nameType="partial"</code>)<a class="headerlink" href="#optional-processing-provenance-uses-nametypepartial" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nt">processID(NXprocess)</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">nameType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">partial</span>
+<span class="w">      </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optional</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">One step in the pipeline from raw pixels to calibrated offsets.</span>
+<span class="w">        </span><span class="no">Replace &#39;ID&#39; with a short name, e.g. &#39;pixel_calibration&#39;.</span>
+<span class="w">        </span><span class="no">Multiple NXprocess groups are allowed.</span>
+<span class="w">      </span><span class="nt">sequence_index(NX_INT)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Step order in the chain (1-based).</span>
+<span class="w">      </span><span class="nt">description(NX_CHAR)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">What this step does.</span>
+<span class="w">      </span><span class="nt">program(NX_CHAR)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optional</span>
+<span class="w">      </span><span class="nt">version(NX_CHAR)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optional</span>
+<span class="w">      </span><span class="nt">date(NX_DATE_TIME)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optional</span>
+</code></pre></div>
+<h3 id="default-plot">Default plot<a class="headerlink" href="#default-plot" title="Permanent link">&para;</a></h3>
+<p>Note how here we are using <code>enumeration</code> to indicate the <code>\@signal</code> and <code>\@axes</code> attribute
+must match the fields defined within <code>NXdata</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nt">interference_pattern(NXdata)</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Default plot: the calibrated 2D interference pattern with spatial</span>
+<span class="w">        </span><span class="no">axes. The signal data may be identical to the raw detector array or</span>
+<span class="w">        </span><span class="no">derived from it via one or more NXprocess steps.</span>
+<span class="w">      </span><span class="nt">\@signal</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">enumeration</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">data</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">\@axes</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">enumeration</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="s">&#39;x&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;y&#39;</span><span class="p p-Indicator">]]</span>
+<span class="w">      </span><span class="nt">data(NX_NUMBER)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_ANY</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">2D interference intensity after any processing steps.</span>
+<span class="w">        </span><span class="nt">dimensions</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">          </span><span class="nt">dim</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(n_x, n_y)</span>
+<span class="w">      </span><span class="nt">x(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_LENGTH</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Horizontal spatial offset from the detector centre, derived from</span>
+<span class="w">          </span><span class="no">pixel index and pixel pitch.</span>
+<span class="w">        </span><span class="nt">dimensions</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">          </span><span class="nt">dim</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(n_x,)</span>
+<span class="w">      </span><span class="nt">y(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_LENGTH</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Vertical spatial offset from the detector centre, derived from</span>
+<span class="w">          </span><span class="no">pixel index and pixel pitch.</span>
+<span class="w">        </span><span class="nt">dimensions</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">          </span><span class="nt">dim</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(n_y,)</span>
+</code></pre></div>
+<p>Here, we are using symbolic names (<code>n_x</code>, <code>n_y</code>) to name the array dimensions and reference them in <dimensions>. Using symbolic names instead of hardcoded integers makes the definition self-documenting and allows validation tools to verify dimensional consistency across fields.</p>
+<p>Add the dimension symbols at the top of the file, outside of the class <code>NXdouble_slit</code> and before <code>type: group</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">symbols</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">Dimension symbols used in this definition.</span>
+<span class="w">  </span><span class="nt">n_x</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">Number of detector pixels along x.</span>
+<span class="w">  </span><span class="nt">n_y</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">Number of detector pixels along y.</span>
+</code></pre></div>
+<hr />
+<h2 id="step-5-validate">Step 5 — Validate<a class="headerlink" href="#step-5-validate" title="Permanent link">&para;</a></h2>
+<p>Convert to NXDL XML and inspect:</p>
+<div class="highlight"><pre><span></span><code>nyaml2nxdl<span class="w"> </span>NXdouble_slit.yaml<span class="w"> </span>--output-file<span class="w"> </span>NXdouble_slit.nxdl.xml
+</code></pre></div>
+<p>As discussed earlier, the application definition is already used inside <code>pynxtools</code></p>
+<p>Run:</p>
+<div class="highlight"><pre><span></span><code>dataconverter<span class="w"> </span>generate-template<span class="w"> </span>--nxdl<span class="w"> </span>NXdouble_slit
+</code></pre></div>
+<p>You should now see a dictionary-style output. You should see e.g. <code>/ENTRY[entry]/title</code> and <code>/ENTRY[entry]/start_time</code> in the output. This is a template for <code>NXdouble_slit</code> that we will fill in the next step. </p>
+<div class="admonition note">
+<p class="admonition-title">Concept vs. instance paths</p>
+<p>The template shows <code>ENTRY</code> (upper case) — the concept — and <code>[entry]</code> (lower case in brackets) — the default instance name. The concept is the schema; the instance is what gets written to the file.</p>
+</div>
+<p>Look for these paths in the output:</p>
+<ul>
+<li><code>/ENTRY[entry]/interference_pattern/x_offset</code></li>
+<li><code>/ENTRY[entry]/interference_pattern/y_offset</code></li>
+<li><code>/ENTRY[entry]/processID[processID]/description</code> (optional)</li>
+<li><code>/ENTRY[entry]/INSTRUMENT[instrument]/detector/distance</code></li>
+</ul>
+<p>You can also pass the <code>--required</code> flag to only see those paths that are required to be filled:</p>
+<div class="highlight"><pre><span></span><code>dataconverter<span class="w"> </span>generate-template<span class="w"> </span>--nxdl<span class="w"> </span>NXdouble_slit<span class="w"> </span>--required
+</code></pre></div>
+<p>Note that the complet version of <code>NXdouble_slit</code> uses even more concepts to illustrate all the possibilities the NeXus data model provides. Have a look at the complete <code>NXdouble_slit.yaml</code>. Which additional ideas can you detect?</p>
+<details class="success">
+<summary>Complete NXdouble_slit.yaml</summary>
+<div class="highlight"><pre><span></span><code><span class="nt">category</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application</span>
+<span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">Application definition for a double-slit interference experiment.</span>
+<span class="w">  </span><span class="no">Records the light source, aperture geometry, detector layout, and the</span>
+<span class="w">  </span><span class="no">measured 2D interference pattern needed to determine fringe spacing and</span>
+<span class="w">  </span><span class="no">source coherence length.</span>
+
+<span class="w">  </span><span class="no">See https://en.wikipedia.org/wiki/Double-slit_experiment.</span>
+<span class="nt">symbols</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">Dimension symbols used in this definition.</span>
+<span class="w">  </span><span class="nt">n_x</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">Number of detector pixels along x.</span>
+<span class="w">  </span><span class="nt">n_y</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">Number of detector pixels along y.</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group</span>
+<span class="nt">NXdouble_slit(NXobject)</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">(NXentry)</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">definition</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enumeration</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">NXdouble_slit</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">title</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">start_time(NX_DATE_TIME)</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">ISO 8601 datetime of the measurement start.</span>
+<span class="w">    </span><span class="nt">end_time(NX_DATE_TIME)</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">recommended</span>
+<span class="w">    </span><span class="nt">(NXinstrument)</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">source(NXsource)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">wavelength(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_WAVELENGTH</span>
+<span class="w">          </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">Central wavelength of the light source.</span>
+<span class="w">        </span><span class="nt">coherence_length(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_LENGTH</span>
+<span class="w">          </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">recommended</span>
+<span class="w">          </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">Temporal coherence length of the source.</span>
+<span class="w">        </span><span class="nt">type(NX_CHAR)</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optional</span>
+<span class="w">          </span><span class="nt">enumeration</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Laser</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Filtered lamp</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">LED</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">double_slit(NXslit)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">x_gap(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_LENGTH</span>
+<span class="w">          </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">Width of each individual slit.</span>
+<span class="w">        </span><span class="nt">slit_separation(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_LENGTH</span>
+<span class="w">          </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">Center-to-center distance between the two slits.</span>
+<span class="w">        </span><span class="nt">height(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optional</span>
+<span class="w">          </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_LENGTH</span>
+<span class="w">          </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">Height of the two slit.</span>
+<span class="w">      </span><span class="nt">detector(NXdetector)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">distance(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_LENGTH</span>
+<span class="w">          </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">Distance from the slit plane to the detector surface.</span>
+<span class="w">    </span><span class="nt">processID(NXprocess)</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">nameType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">partial</span>
+<span class="w">      </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optional</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Describes one step in the processing chain that converts raw detector</span>
+<span class="w">        </span><span class="no">pixel data to the calibrated interference pattern stored in</span>
+<span class="w">        </span><span class="no">``interference_pattern``. The &#39;ID&#39; suffix in the group name is replaced</span>
+<span class="w">        </span><span class="no">by a short identifier chosen by the writer, e.g. &#39;pixel_calibration&#39;</span>
+<span class="w">        </span><span class="no">or &#39;background_correction&#39;. Multiple NXprocess groups may be present;</span>
+<span class="w">        </span><span class="no">their order is given by sequence_index.</span>
+<span class="w">      </span><span class="nt">sequence_index(NX_POSINT)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Sequence index of processing, for determining the order of multiple</span>
+<span class="w">          </span><span class="no">NXprocess steps. Starts with 1.</span>
+<span class="w">      </span><span class="nt">description(NX_CHAR)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Free-text description of what this processing step does.</span>
+<span class="w">      </span><span class="nt">program(NX_CHAR)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optional</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Version string of the software.</span>
+<span class="w">      </span><span class="nt">version(NX_CHAR)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optional</span>
+<span class="w">      </span><span class="nt">date(NX_DATE_TIME)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optional</span>
+<span class="w">    </span><span class="nt">interference_pattern(NXdata)</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Default plot: the calibrated 2D interference pattern with spatial</span>
+<span class="w">        </span><span class="no">axes. The signal data may be identical to the raw detector array or</span>
+<span class="w">        </span><span class="no">derived from it via one or more NXprocess steps.</span>
+<span class="w">      </span><span class="nt">\@signal</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">enumeration</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">data</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">\@axes</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">enumeration</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="s">&#39;x&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;y&#39;</span><span class="p p-Indicator">]]</span>
+<span class="w">      </span><span class="nt">data(NX_NUMBER)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_ANY</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">2D interference intensity after any processing steps.</span>
+<span class="w">        </span><span class="nt">dimensions</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">          </span><span class="nt">dim</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(n_x, n_y)</span>
+<span class="w">      </span><span class="nt">x(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_LENGTH</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Horizontal spatial offset from the detector centre, derived from</span>
+<span class="w">          </span><span class="no">pixel index and pixel pitch.</span>
+<span class="w">        </span><span class="nt">dimensions</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">          </span><span class="nt">dim</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(n_x,)</span>
+<span class="w">      </span><span class="nt">y(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_LENGTH</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Vertical spatial offset from the detector centre, derived from</span>
+<span class="w">          </span><span class="no">pixel index and pixel pitch.</span>
+<span class="w">        </span><span class="nt">dimensions</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">          </span><span class="nt">dim</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(n_y,)</span>
+</code></pre></div>
+</details>
+<hr />
+<h2 id="advanced-specialize-a-base-class-bonus">Advanced: specialize a base class (bonus)<a class="headerlink" href="#advanced-specialize-a-base-class-bonus" title="Permanent link">&para;</a></h2>
+<p>If your source is always a laser, you can create a dedicated <code>NXlaser</code> base class rather than repeating the specialization in every application definition:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># NXlaser.yaml</span>
+<span class="nt">category</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">base</span>
+<span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A specialization of NXsource for coherent laser sources.</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group</span>
+<span class="nt">NXlaser(NXsource)</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">wavelength(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Central wavelength of the laser line.</span>
+<span class="w">  </span><span class="nt">coherence_length(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NX_LENGTH</span>
+<span class="w">    </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">recommended</span>
+<span class="w">  </span><span class="nt">type(NX_CHAR)</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enumeration</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Laser</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<p>Then in <code>NXdouble_slit</code>, replace <code>source(NXsource)</code> with <code>source(NXlaser)</code> and only list which fields are required or recommended — everything defined in <code>NXlaser</code> is inherited automatically.</p>
+<div class="highlight"><pre><span></span><code><span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
+<span class="l l-Scalar l-Scalar-Plain">NXdouble_slit(NXobject)</span><span class="p p-Indicator">:</span>
+<span class="w">  </span><span class="nt">(NXentry)</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">(NXinstrument)</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">source(NXlaser)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">wavelength(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">coherence_length(NX_FLOAT)</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">exists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">recommended</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>This is just an exercise for you to understand NeXus better. We will not use <code>NXlaser</code> in the upcoming examples. Find a complete <code>NXlaser.nxdl.xml</code> in the <a href="https://github.com/FAIRmat-NFDI/pynxtools/tree/master/examples/custom-application-definition"><code>pynxtools</code> examples</a>.</p>
+</div>
+<hr />
+<h2 id="appendix-how-to-add-your-definition-to-pynxtools">Appendix: How to add your definition to pynxtools<a class="headerlink" href="#appendix-how-to-add-your-definition-to-pynxtools" title="Permanent link">&para;</a></h2>
+<p>As we said above, <code>NXdouble_slit.nxdl.xml</code> is already part of <code>pynxtools</code>, so you don't need to add it for the following steps. However, if you create another application definition <code>NXmytechnique</code>, there are two possibilities of adding it.</p>
+<p><strong>Local development (fastest):</strong></p>
+<p>In order to use your application definitions and base classes directly, you will need to add them to the NeXus definitions stored in <code>pynxtools</code>. For this, you need to install <code>pynxtools</code> in editable mode. You can learn more in the <code>pynxtools</code> <a href="https://fairmat-nfdi.github.io/pynxtools/tutorial/contributing.html#development-installation" rel="noopener" target="_blank">development guide</a>.</p>
+<p>Install <code>pynxtools</code> with the <code>-e</code> option in the same virtual environment that you are already working in. Instantiate the <code>definitions</code> submodule.</p>
+<p>Then you can place your application definition NXDL XML file in <code>pynxtools</code>:</p>
+<div class="highlight"><pre><span></span><code>cp<span class="w"> </span>NXmytechnique.nxdl.xml<span class="w"> </span>src/pynxtools/definitions/contributed_definitions/
+dataconverter<span class="w"> </span>generate-template<span class="w"> </span>--nxdl<span class="w"> </span>NXmytechnique
+</code></pre></div>
+<p><strong>Community contribution (permanent):</strong></p>
+<p>The more permanent way is to add the new application definition (or base class) to the FAIRmat NeXus definitions repository. That ensures that others can use it and that it can eventually be brought to standardization with the NeXus International Advisory Committee (NIAC):</p>
+<ol>
+<li>Fork <a href="https://github.com/FAIRmat-NFDI/nexus_definitions" rel="noopener" target="_blank">FAIRmat-NFDI/nexus_definitions</a></li>
+<li>Add your NXDL file to <code>contributed_definitions/</code></li>
+<li>Open a pull request</li>
+<li>Once merged, update the pynxtools submodule: <code>./scripts/definitions.sh update</code></li>
+</ol>
+<hr />
+<h2 id="further-reading">Further reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://fairmat-nfdi.github.io/pynxtools/tutorial/writing-an-application-definition.html" rel="noopener" target="_blank">pynxtools tutorial &gt; Writing your first application definition</a></li>
+<li><a href="https://fairmat-nfdi.github.io/pynxtools/how-tos/nexus/write-an-application-definition.html" rel="noopener" target="_blank">pynxtools: how to write an application definition</a></li>
+<li><a href="https://manual.nexusformat.org/applying-nexus.html" rel="noopener" target="_blank">NeXus manual &gt; Applying NeXus</a></li>
+<li><a href="https://fairmat-nfdi.github.io/nyaml/" rel="noopener" target="_blank">nyaml documentation</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
