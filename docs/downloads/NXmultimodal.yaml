@@ -1,33 +1,33 @@
-category: application
-doc: |
+\category: application
+\doc: |
   Test for a multi-modal experiment, performing XRD and XAS measurements simultanously on the sample.
 
-type: group
+\type: group
 NXmultimodal(NXobject):
   (NXentry):
-    definition:
-      doc: |
+    \definition:
+      \doc: |
         Experiments doing XRD and XAS measurements simultanously on the sample
-      enumeration: [NXmultimodal]
+      \enumeration: [NXmultimodal]
     title:
-      exists: recommended
+      \exists: recommended
     specialty(NX_FLOAT):
-      doc: |
+      \doc: |
         this is required
     (NXinstrument):
       (NXenvironment):
-        doc: |
+        \doc: |
           this is for sample environment
     et1_xrd(NXsubentry):
-      doc: |
+      \doc: |
         explain why we have XRD data here
-      definition:
-        enumeration: [NXmonopd]
+      \definition:
+        \enumeration: [NXmonopd]
     et2_fluo(NXsubentry):
-      doc: |
+      \doc: |
         explain why we have XAS data here
-      definition:
-        enumeration: [NXfluo]
+      \definition:
+        \enumeration: [NXfluo]
     (NXdata):
-      doc: |
+      \doc: |
         explain what kind of plots we expect here
