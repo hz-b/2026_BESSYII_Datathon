@@ -101,13 +101,13 @@ The HDF5 group `my_pilatus_detector` satisfies the `detector(NXdetector)` requir
 
 ```yaml
 wavelength(NX_FLOAT):
-  unit: NX_WAVELENGTH    # a unit *category*, not a specific unit
-  doc: Central wavelength of the source.
+  \unit: NX_WAVELENGTH    # a unit *category*, not a specific unit
+  \doc: Central wavelength of the source.
 ```
 
 - **Type**: `NX_FLOAT`, `NX_INT`, `NX_CHAR`, `NX_DATE_TIME`, `NX_NUMBER`, …
 - **Unit category**: `NX_LENGTH`, `NX_ENERGY`, `NX_WAVELENGTH`, … — stored in a sibling HDF5 attribute `wavelength/@units`
-- **Optionality**: fields in application definitions are **required by default**; mark others with `exists: recommended` or `exists: optional`
+- **Optionality**: fields in application definitions are **required by default**; mark others with `\exists: recommended` or `\exists: optional`
 
 ---
 

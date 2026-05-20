@@ -329,13 +329,13 @@ Use the skills from [Session 1](example_pipeline/1-appdef.md). Start with the sm
 
 ```yaml
 # NXmytechnique.yaml
-category: application
-doc: Application definition for my technique.
-type: group
+\category: application
+\doc: Application definition for my technique.
+\type: group
 NXmytechnique(NXobject):
   (NXentry):
-    definition:
-      enumeration: [NXmytechnique]
+    \definition:
+      \enumeration: [NXmytechnique]
     title:
     (NXinstrument):
       name(NX_CHAR):
